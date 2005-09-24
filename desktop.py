@@ -14,6 +14,10 @@ def open(url, desktop=None):
     guessing or detecting which environment is being used.
 
     Suggested values for 'desktop' are "KDE" and "GNOME".
+
+    The process identifier of the "opener" (ie. viewer, editor, browser or
+    program) associated with the 'url' is returned by this function. If the
+    process identifier cannot be determined, None is returned.
     """
 
     if desktop == "KDE" or \
@@ -29,9 +33,12 @@ def open(url, desktop=None):
         cmd = ["gnome-open", url]
 
     else:
-        os.startfile(url)
-        return
+        try:
+            # NOTE: This returns None in current implementations.
+            return os.startfile(url)
+        except AttributeError, exc:
+            raise OSError, "Desktop not supported (os.startfile could not be used)"
 
-    subprocess.Popen(cmd)
+    return subprocess.Popen(cmd).pid
 
 # vim: tabstop=4 expandtab shiftwidth=4
