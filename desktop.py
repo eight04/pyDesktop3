@@ -1,10 +1,50 @@
 #!/usr/bin/env python
 
-"Simple desktop integration for Python."
+"""
+Simple desktop integration for Python. This module provides desktop environment
+detection and resource opening support for a selection of common and
+standardised desktop environments.
+
+To detect a specific desktop environment, use the get_desktop function.
+To detect whether the desktop environment is standardised (according to a
+proposed DESKTOP_LAUNCH standard), use the is_standard function.
+
+Details of the DESKTOP_LAUNCH environment variable convention can be found here:
+http://lists.freedesktop.org/archives/xdg/2004-August/004489.html
+"""
 
 import os
 import sys
 import subprocess
+
+def get_desktop():
+
+    """
+    Detect the current desktop environment, returning the name of the
+    environment. If no environment could be detected, None is returned.
+    """
+
+    if os.environ.has_key("KDE_FULL_SESSION") or \
+        os.environ.has_key("KDE_MULTIHEAD"):
+        return "KDE"
+    elif os.environ.has_key("GNOME_DESKTOP_SESSION_ID") or \
+        os.environ.has_key("GNOME_KEYRING_SOCKET"):
+        return "GNOME"
+    elif sys.platform == "darwin":
+        return "Mac OS X"
+    elif hasattr(os, "startfile"):
+        return "Windows"
+    else:
+        return None
+
+def is_standard():
+
+    """
+    Return whether the current desktop supports standardised application
+    launching.
+    """
+
+    return os.environ.has_key("DESKTOP_LAUNCH")
 
 def open(url, desktop=None):
 
@@ -14,48 +54,45 @@ def open(url, desktop=None):
     particular desktop environment's mechanisms to open the 'url' instead of
     guessing or detecting which environment is being used.
 
-    Suggested values for 'desktop' are "KDE", "GNOME", "Mac OS X" and "generic",
-    where "generic" uses an OPENER environment variable to open the specified
-    'url'.
+    Suggested values for 'desktop' are "standard", "KDE", "GNOME", "Mac OS X",
+    "Windows" where "standard" employs a DESKTOP_LAUNCH environment variable to
+    open the specified 'url'.
 
     The process identifier of the "opener" (ie. viewer, editor, browser or
     program) associated with the 'url' is returned by this function. If the
     process identifier cannot be determined, None is returned.
     """
 
-    if desktop == "generic" or \
-        desktop is None and os.environ.has_key("OPENER"):
+    # Attempt to detect a desktop environment.
 
-        try:
-            # NOTE: This may not handle sophisticated commands properly.
-            cmd = os.environ["OPENER"].split()
-            cmd.append(url)
-        except KeyError, exc:
-            raise OSError, "Desktop not supported (OPENER could not be used)"
+    detected = get_desktop()
 
-    elif desktop == "KDE" or \
-        desktop is None and (os.environ.has_key("KDE_FULL_SESSION") or
-            os.environ.has_key("KDE_MULTIHEAD")):
+    # Start with desktops whose existence can be easily tested.
 
+    if (desktop is None or desktop == "standard") and is_standard():
+        # NOTE: This may not handle sophisticated commands properly.
+        cmd = os.environ["DESKTOP_LAUNCH"].split()
+        cmd.append(url)
+
+    elif (desktop is None or desktop == "Windows") and detected == "Windows":
+        # NOTE: This returns None in current implementations.
+        return os.startfile(url)
+
+    # Test for desktops where the overriding is not verified.
+
+    elif (desktop or detected) == "KDE":
         cmd = ["kfmclient", "exec", url]
 
-    elif desktop == "GNOME" or \
-        desktop is None and (os.environ.has_key("GNOME_DESKTOP_SESSION_ID") or
-            os.environ.has_key("GNOME_KEYRING_SOCKET")):
-
+    elif (desktop or detected) == "GNOME":
         cmd = ["gnome-open", url]
 
-    elif desktop == "Mac OS X" or \
-        desktop is None and sys.platform == "darwin":
-
+    elif (desktop or detected) == "Mac OS X":
         cmd = ["open", url]
 
+    # Finish with an error where no suitable desktop was identified.
+
     else:
-        try:
-            # NOTE: This returns None in current implementations.
-            return os.startfile(url)
-        except AttributeError, exc:
-            raise OSError, "Desktop not supported (os.startfile could not be used)"
+        raise OSError, "Desktop not supported (neither DESKTOP_LAUNCH nor os.startfile could be used)"
 
     return subprocess.Popen(cmd).pid
 
