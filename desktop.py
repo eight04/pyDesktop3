@@ -16,6 +16,7 @@ http://lists.freedesktop.org/archives/xdg/2004-August/004489.html
 import os
 import sys
 import subprocess
+import commands
 
 def get_desktop():
 
@@ -56,7 +57,8 @@ def open(url, desktop=None):
 
     Suggested values for 'desktop' are "standard", "KDE", "GNOME", "Mac OS X",
     "Windows" where "standard" employs a DESKTOP_LAUNCH environment variable to
-    open the specified 'url'.
+    open the specified 'url'. DESKTOP_LAUNCH should be a command, possibly
+    followed by arguments, and must have any special characters shell-escaped. 
 
     The process identifier of the "opener" (ie. viewer, editor, browser or
     program) associated with the 'url' is returned by this function. If the
@@ -70,9 +72,8 @@ def open(url, desktop=None):
     # Start with desktops whose existence can be easily tested.
 
     if (desktop is None or desktop == "standard") and is_standard():
-        # NOTE: This may not handle sophisticated commands properly.
-        cmd = os.environ["DESKTOP_LAUNCH"].split()
-        cmd.append(url)
+        arg = "".join([os.environ["DESKTOP_LAUNCH"], commands.mkarg(url)])
+        return subprocess.Popen(arg, shell=1).pid
 
     elif (desktop is None or desktop == "Windows") and detected == "Windows":
         # NOTE: This returns None in current implementations.
