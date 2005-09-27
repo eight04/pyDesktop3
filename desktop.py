@@ -5,9 +5,46 @@ Simple desktop integration for Python. This module provides desktop environment
 detection and resource opening support for a selection of common and
 standardised desktop environments.
 
+Desktop Detection
+-----------------
+
 To detect a specific desktop environment, use the get_desktop function.
-To detect whether the desktop environment is standardised (according to a
+To detect whether the desktop environment is standardised (according to the
 proposed DESKTOP_LAUNCH standard), use the is_standard function.
+
+Opening URLs
+------------
+
+To open a URL in the current desktop environment, relying on the automatic
+detection of that environment, use the desktop.open function as follows:
+
+desktop.open("http://www.python.org")
+
+To override the detected desktop, specify the desktop parameter to the open
+function as follows:
+
+desktop.open("http://www.python.org", "KDE") # Insists on KDE
+desktop.open("http://www.python.org", "GNOME") # Insists on GNOME
+
+Without overriding using the desktop parameter, the open function will attempt
+to use the "standard" desktop opening mechanism which is controlled by the
+DESKTOP_LAUNCH environment variable as described below.
+
+The DESKTOP_LAUNCH Environment Variable
+---------------------------------------
+
+The DESKTOP_LAUNCH environment variable must be shell-quoted where appropriate,
+as shown in some of the following examples:
+
+DESKTOP_LAUNCH="kdialog --msgbox"       Should present any opened URLs in
+                                        their entirety in a KDE message box.
+                                        (Command "kdialog" plus parameter.)
+DESKTOP_LAUNCH="my\ opener"             Should run the "my opener" program to
+                                        open URLs.
+                                        (Command "my opener", no parameters.)
+DESKTOP_LAUNCH="my\ opener --url"       Should run the "my opener" program to
+                                        open URLs.
+                                        (Command "my opener" plus parameter.)
 
 Details of the DESKTOP_LAUNCH environment variable convention can be found here:
 http://lists.freedesktop.org/archives/xdg/2004-August/004489.html
