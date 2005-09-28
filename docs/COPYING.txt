@@ -1,0 +1,6 @@
+Licence Agreement for desktop
+-----------------------------
+
+Copyright (C) 2005 Paul Boddie <paul@boddie.org.uk>
+
+Licensed under the Academic Free License version 2.1 - see LICENCE.txt.
