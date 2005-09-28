@@ -1,0 +1,26 @@
+Metadata-Version: 1.1
+Name: desktop
+Version: 0.1
+Author: Paul Boddie
+Author-email: paul at boddie org uk
+Maintainer: Paul Boddie
+Maintainer-email: paul at boddie org uk
+Home-page: http://www.python.org/sf?id=1301512
+Download-url: http://www.python.org/sf?id=1301512
+Summary: Simple desktop integration for Python
+License: Academic Free License version 2.1
+Description: This module provides desktop environment detection and resource
+        opening support for a selection of common and standardised desktop
+        environments.
+Keywords: desktop startfile DESKTOP_LAUNCH KDE GNOME
+Platform: Any
+Classifier: Environment :: MacOS X
+Classifier: Environment :: Other Environment
+Classifier: Environment :: Win32 (MS Windows)
+Classifier: Environment :: X11 Applications
+Classifier: Environment :: X11 Applications :: Gnome
+Classifier: Environment :: X11 Applications :: KDE
+Classifier: License :: OSI Approved :: Academic Free License (AFL)
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
