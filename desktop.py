@@ -5,6 +5,12 @@ Simple desktop integration for Python. This module provides desktop environment
 detection and resource opening support for a selection of common and
 standardised desktop environments.
 
+Copyright (C) 2005 Paul Boddie <paul@boddie.org.uk>
+
+Licensed under the Academic Free License version 2.1 - see docs/LICENCE.txt.
+
+--------
+
 Desktop Detection
 -----------------
 
