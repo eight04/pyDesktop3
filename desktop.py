@@ -56,7 +56,7 @@ Details of the DESKTOP_LAUNCH environment variable convention can be found here:
 http://lists.freedesktop.org/archives/xdg/2004-August/004489.html
 """
 
-__version__ = "0.1"
+__version__ = "0.2"
 
 import os
 import sys
@@ -103,7 +103,7 @@ def _wait(pid, block):
         os.waitpid(pid, os.P_WAIT)
     return pid
 
-def open(url, desktop=None, wait=1):
+def open(url, desktop=None, wait=0):
 
     """
     Open the 'url' in the current desktop's preferred file browser. If the
@@ -121,9 +121,9 @@ def open(url, desktop=None, wait=1):
     process identifier cannot be determined, None is returned.
 
     An optional 'wait' parameter is also available for advanced usage and, if
-    'wait' is set to a false value, this function will not wait for the
-    launching mechanism to complete before returning (as opposed to waiting and
-    then returning, as is the default behaviour).
+    'wait' is set to a true value, this function will wait for the launching
+    mechanism to complete before returning (as opposed to immediately returning
+    as is the default behaviour).
     """
 
     # Attempt to detect a desktop environment.

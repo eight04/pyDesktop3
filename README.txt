@@ -36,5 +36,5 @@ ROX-Filer     Supports file opening using "rox <filename>" but not URL
 New in desktop 0.2 (Changes since desktop 0.1)
 ----------------------------------------------
 
-  * Added waiting for launcher processes by default.
+  * Added support for waiting for launcher processes.
   * Added a tests directory.
