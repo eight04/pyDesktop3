@@ -92,7 +92,18 @@ def is_standard():
 
     return os.environ.has_key("DESKTOP_LAUNCH")
 
-def open(url, desktop=None):
+def _wait(pid, block):
+
+    """
+    Perform a blocking Wait for the given process identifier, 'pid', if the
+    'block' flag is set to a true value. Return the process identifier.
+    """
+
+    if block:
+        os.waitpid(pid, os.P_WAIT)
+    return pid
+
+def open(url, desktop=None, wait=1):
 
     """
     Open the 'url' in the current desktop's preferred file browser. If the
@@ -108,6 +119,11 @@ def open(url, desktop=None):
     The process identifier of the "opener" (ie. viewer, editor, browser or
     program) associated with the 'url' is returned by this function. If the
     process identifier cannot be determined, None is returned.
+
+    An optional 'wait' parameter is also available for advanced usage and, if
+    'wait' is set to a false value, this function will not wait for the
+    launching mechanism to complete before returning (as opposed to waiting and
+    then returning, as is the default behaviour).
     """
 
     # Attempt to detect a desktop environment.
@@ -118,7 +134,7 @@ def open(url, desktop=None):
 
     if (desktop is None or desktop == "standard") and is_standard():
         arg = "".join([os.environ["DESKTOP_LAUNCH"], commands.mkarg(url)])
-        return subprocess.Popen(arg, shell=1).pid
+        return _wait(subprocess.Popen(arg, shell=1).pid, wait)
 
     elif (desktop is None or desktop == "Windows") and detected == "Windows":
         # NOTE: This returns None in current implementations.
@@ -140,6 +156,6 @@ def open(url, desktop=None):
     else:
         raise OSError, "Desktop not supported (neither DESKTOP_LAUNCH nor os.startfile could be used)"
 
-    return subprocess.Popen(cmd).pid
+    return _wait(subprocess.Popen(cmd).pid, wait)
 
 # vim: tabstop=4 expandtab shiftwidth=4
