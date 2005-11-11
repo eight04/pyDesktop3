@@ -32,3 +32,9 @@ GNOME         Supports file and URL opening using gnome-open.
 
 ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
+
+New in desktop 0.2 (Changes since desktop 0.1)
+----------------------------------------------
+
+  * Added waiting for launcher processes by default.
+  * Added a tests directory.
