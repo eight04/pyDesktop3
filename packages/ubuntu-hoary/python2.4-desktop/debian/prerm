@@ -1,0 +1,24 @@
+#! /bin/sh 
+# prerm script for desktop
+
+set -e
+
+PACKAGE=python2.4-desktop
+VERSION=2.4
+LIB="/usr/lib/python$VERSION"
+DIR="$LIB/site-packages"
+
+case "$1" in
+    remove|upgrade|failed-upgrade)
+        rm ${DIR}/desktop.py[co]
+    ;;
+
+    *)
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+
+
+exit 0

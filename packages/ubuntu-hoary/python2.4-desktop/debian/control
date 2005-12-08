@@ -1,0 +1,17 @@
+Source: desktop
+Priority: optional
+Maintainer: Paul Boddie <paul@boddie.org.uk>
+Build-Depends: debhelper (>> 3.0.0), python2.4-dev
+Standards-Version: 3.5.8
+Section: python
+
+Package: python2.4-desktop
+Section: python
+Architecture: all
+Depends: python2.4
+Suggests: kde, gnome
+Description: This module provides desktop environment detection and
+ resource opening support for a selection of common and standardised
+ desktop environments.
+ .
+ This package is built for Python 2.4.x.
