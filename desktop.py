@@ -56,7 +56,7 @@ Details of the DESKTOP_LAUNCH environment variable convention can be found here:
 http://lists.freedesktop.org/archives/xdg/2004-August/004489.html
 """
 
-__version__ = "0.2"
+__version__ = "0.2.1"
 
 import os
 import sys

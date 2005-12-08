@@ -9,7 +9,7 @@ setup(
     description  = "Simple desktop integration for Python.",
     author       = "Paul Boddie",
     author_email = "paul@boddie.org.uk",
-    url          = "http://www.python.org/sf?id=1301512",
+    url          = "http://www.python.org/pypi/desktop",
     version      = desktop.__version__,
     py_modules   = ["desktop"]
     )

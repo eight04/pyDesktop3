@@ -3,7 +3,10 @@ Introduction
 
 The desktop module provides desktop environment detection and resource opening
 support for a selection of common and standardised desktop environments. See
-the module docstring for a more extensive introduction.
+the module docstring for a more extensive introduction. See also the following
+patch registered in the Python SourceForge project:
+
+http://www.python.org/sf?id=1301512
 
 Contact, Copyright and Licence Information
 ------------------------------------------
@@ -33,8 +36,44 @@ GNOME         Supports file and URL opening using gnome-open.
 ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
 
+New in desktop 0.2.1 (Changes since desktop 0.2)
+------------------------------------------------
+
+  * Added Debian/Ubuntu package support.
+
 New in desktop 0.2 (Changes since desktop 0.1)
 ----------------------------------------------
 
   * Added support for waiting for launcher processes.
   * Added a tests directory.
+
+Release Procedures
+------------------
+
+Update the desktop __version__ attribute.
+Change the version number and package filename/directory in the documentation.
+Update the release notes (see above).
+Update the package information.
+Check the release information in the PKG-INFO file.
+Check the setup.py file.
+Tag, export.
+Archive, upload.
+Update PyPI, PythonInfo Wiki, Vaults of Parnassus entries.
+
+Making Packages
+---------------
+
+To make Debian-based packages:
+
+  1. Create new package directories under packages if necessary.
+  2. Make a symbolic link in the distribution's root directory to keep the
+     Debian tools happy:
+
+     ln -s packages/ubuntu-hoary/python2.4-desktop/debian/
+
+  3. Run the package builder:
+
+     dpkg-buildpackage -rfakeroot
+
+  4. Locate and tidy up the packages in the parent directory of the
+     distribution's root directory.
