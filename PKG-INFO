@@ -1,14 +1,14 @@
 Metadata-Version: 1.1
 Name: desktop
-Version: 0.2.1
+Version: 0.2.2
 Author: Paul Boddie
 Author-email: paul at boddie org uk
 Maintainer: Paul Boddie
 Maintainer-email: paul at boddie org uk
 Home-page: http://www.python.org/sf?id=1301512
-Download-url: http://www.boddie.org.uk/python/downloads/desktop-0.2.1.tar.gz
+Download-url: http://www.boddie.org.uk/python/downloads/desktop-0.2.2.tar.gz
 Summary: Simple desktop integration for Python
-License: Academic Free License version 2.1
+License: LGPL
 Description: This module provides desktop environment detection and resource
         opening support for a selection of common and standardised desktop
         environments.
@@ -20,7 +20,7 @@ Classifier: Environment :: Win32 (MS Windows)
 Classifier: Environment :: X11 Applications
 Classifier: Environment :: X11 Applications :: Gnome
 Classifier: Environment :: X11 Applications :: KDE
-Classifier: License :: OSI Approved :: Academic Free License (AFL)
+Classifier: License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
 Classifier: Natural Language :: English
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python

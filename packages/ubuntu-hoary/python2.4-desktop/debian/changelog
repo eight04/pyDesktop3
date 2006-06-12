@@ -1,3 +1,9 @@
+desktop (0.2.2-0ubuntu1) hoary; urgency=low
+
+  * Changed the licence to LGPL.
+
+ -- Paul Boddie <paul@boddie.org.uk>  Tue, 13 Jun 2006 00:04:05 +0200
+
 desktop (0.2.1-0ubuntu1) hoary; urgency=low
 
   * New upstream release.
