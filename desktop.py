@@ -5,7 +5,7 @@ Simple desktop integration for Python. This module provides desktop environment
 detection and resource opening support for a selection of common and
 standardised desktop environments.
 
-Copyright (C) 2005 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2005, 2006 Paul Boddie <paul@boddie.org.uk>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -68,11 +68,25 @@ Details of the DESKTOP_LAUNCH environment variable convention can be found here:
 http://lists.freedesktop.org/archives/xdg/2004-August/004489.html
 """
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 import os
 import sys
-import subprocess
+
+try:
+    import subprocess
+    def _run(cmd, shell, wait):
+        opener = subprocess.Popen(cmd, shell=shell)
+        if wait: opener.wait()
+        return opener.pid
+
+except ImportError:
+    import popen2
+    def _run(cmd, shell, wait):
+        opener = popen2.Popen3(cmd)
+        if wait: opener.wait()
+        return opener.pid
+
 import commands
 
 def get_desktop():
@@ -103,17 +117,6 @@ def is_standard():
     """
 
     return os.environ.has_key("DESKTOP_LAUNCH")
-
-def _wait(pid, block):
-
-    """
-    Perform a blocking Wait for the given process identifier, 'pid', if the
-    'block' flag is set to a true value. Return the process identifier.
-    """
-
-    if block:
-        os.waitpid(pid, os.P_WAIT)
-    return pid
 
 def open(url, desktop=None, wait=0):
 
@@ -146,7 +149,7 @@ def open(url, desktop=None, wait=0):
 
     if (desktop is None or desktop == "standard") and is_standard():
         arg = "".join([os.environ["DESKTOP_LAUNCH"], commands.mkarg(url)])
-        return _wait(subprocess.Popen(arg, shell=1).pid, wait)
+        return _run(arg, 1, wait)
 
     elif (desktop is None or desktop == "Windows") and detected == "Windows":
         # NOTE: This returns None in current implementations.
@@ -168,6 +171,6 @@ def open(url, desktop=None, wait=0):
     else:
         raise OSError, "Desktop not supported (neither DESKTOP_LAUNCH nor os.startfile could be used)"
 
-    return _wait(subprocess.Popen(cmd).pid, wait)
+    return _run(cmd, 0, wait)
 
 # vim: tabstop=4 expandtab shiftwidth=4

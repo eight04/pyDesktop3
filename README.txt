@@ -36,6 +36,11 @@ GNOME         Supports file and URL opening using gnome-open.
 ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
 
+New in desktop 0.2.3 (Changes since desktop 0.2.2)
+--------------------------------------------------
+
+  * Added Python 2.3 support (using popen2 instead of subprocess).
+
 New in desktop 0.2.2 (Changes since desktop 0.2.1)
 --------------------------------------------------
 
