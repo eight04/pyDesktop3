@@ -1,3 +1,9 @@
+desktop (0.2.4-0ubuntu1) hoary; urgency=low
+
+  * Added XFCE support.
+
+ -- Paul Boddie <paul@boddie.org.uk>  Wed,  4 Oct 2006 23:20:50 +0200
+
 desktop (0.2.3-0ubuntu1) hoary; urgency=low
 
   * Added Python 2.3 support (using popen2 instead of
