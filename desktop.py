@@ -48,21 +48,6 @@ Without overriding using the desktop parameter, the open function will attempt
 to use the "standard" desktop opening mechanism which is controlled by the
 DESKTOP_LAUNCH environment variable as described below.
 
-Opening Dialogue Boxes (Dialogs)
---------------------------------
-
-To open a dialogue box (dialog) in the current desktop environment, relying on
-the automatic detection of that environment, use the desktop.dialog function as
-follows:
-
-desktop.dialog("question", text="Are you sure?")
-
-To override the detected desktop, specify the desktop parameter to the dialog
-function as follows:
-
-desktop.dialog("question", "KDE", text="Are you sure?") # Insists on KDE
-desktop.dialog("question", "GNOME", text="Are you sure?") # Insists on GNOME
-
 The DESKTOP_LAUNCH Environment Variable
 ---------------------------------------
 
@@ -87,6 +72,8 @@ __version__ = "0.2.4"
 
 import os
 import sys
+
+# Provide suitable process creation functions.
 
 try:
     import subprocess
@@ -124,43 +111,6 @@ except ImportError:
         return opener.poll() == 0
 
 import commands
-
-# Internal data.
-
-_dialog_commands = {
-    "KDE" : "kdialog",
-    "GNOME" : "zenity",
-    "X11" : "Xdialog"
-    }
-
-_dialog_options = {
-    "KDE" : {
-        "question" :    (_status, ["--yesno"], ["text"]),
-        "message" :     (_status, ["--msgbox"], ["text"]),
-        "input" :       (_readfrom, ["--inputbox"], ["text", "input"]),
-        "password" :    (_readfrom, ["--password"], ["text"]),
-        "textfile" :    (_readfrom, ["--textbox"], ["filename", "width", "height"]),
-        "menu" :        (_readfrom, ["--menu"], ["text", "entries2"]),
-        "radiolist" :   (_readfrom, ["--radiolist"], ["text", "entries3"]),
-        "checklist" :   (_readfrom, ["--checklist"], ["text", "entries3"]),
-        "pulldown" :    (_readfrom, ["--combobox"], ["text", "entries1"]),
-        },
-    "X11" : {
-        "question" :    (_status, ["--stdout", "--yesno"], ["text", "height", "width"]),
-        "message" :     (_status, ["--stdout", "--msgbox"], ["text", "height", "width"]),
-        "input" :       (_readfrom, ["--stdout", "--inputbox"], ["text", "height", "width", "input"]),
-        "password" :    (_readfrom, ["--stdout", "--password", "--inputbox"], ["text", "height", "width"]),
-        "textfile" :    (_readfrom, ["--stdout", "--textbox"], ["text", "height", "width"]),
-        "menu" :        (_readfrom, ["--stdout", "--menubox"], ["text", "height", "width", "menu_height", "entries2"]),
-        "radiolist" :   (_readfrom, ["--stdout", "--radiolist"], ["text", "height", "width", "list_height", "entries3"]),
-        "checklist" :   (_readfrom, ["--stdout", "--checklist"], ["text", "height", "width", "list_height", "entries3"]),
-        "pulldown" :    (_readfrom, ["--stdout", "--combobox"], ["text", "height", "width", "entries1"]),
-        },
-    }
-
-_dialog_defaults = {
-    "width" : 40, "height" : 30, "menu_height" : 20, "list_height" : 20
-    }
 
 # Introspection functions.
 
@@ -277,108 +227,8 @@ def open(url, desktop=None, wait=0):
     # Finish with an error where no suitable desktop was identified.
 
     else:
-        raise OSError, "Desktop not supported (neither DESKTOP_LAUNCH nor os.startfile could be used)"
+        raise OSError, "Desktop '%s' not supported (neither DESKTOP_LAUNCH nor os.startfile could be used)" % desktop_in_use
 
     return _run(cmd, 0, wait)
-
-def dialog(dialog_type, desktop=None, **options):
-
-    """
-    Open a dialogue box (dialog) using a program appropriate to the desktop
-    environment in use. The specified 'dialog_type' may be one of the following:
-
-    question    A dialogue asking a question and showing response buttons.
-                Options: text, width (in characters), height (in characters)
-
-    message     A message dialogue.
-                Options: text, level ("warning", "error", "info")
-
-    menu        A menu of options, one of which being selectable.
-                Options: text, width (in characters), height (in characters),
-                menu_height (in entries), entries (list of (value, text) tuples)
-
-    radiolist   A list of radio buttons, one of which being selectable.
-                Options: text, width (in characters), height (in characters),
-                list_height (in entries), entries (list of (value, text, status)
-                tuples)
-
-    checklist   A list of checkboxes, many being selectable.
-                Options: text, width (in characters), height (in characters),
-                list_height (in entries), entries (list of (value, text, status)
-                tuples)
-
-    pulldown    A pull-down menu of options, one of which being selectable.
-                Options: text, width (in characters), height (in characters),
-                entries (list of values)
-
-    input       An input dialogue, consisting of an input field.
-                Options: text, width (in characters), height (in characters),
-                input
-
-    password    A password dialogue, consisting of a password entry field.
-                Options: text, width (in characters), height (in characters),
-                input
-
-    textfile    A text file input box.
-                Options: text, width (in characters), height (in characters),
-                filename
-
-    If the optional 'desktop' parameter is specified then attempt to use that
-    particular desktop environment's mechanisms to open the 'url' instead of
-    guessing or detecting which environment is being used.
-
-    Suggested values for 'desktop' are "standard", "KDE", "GNOME", "Mac OS X",
-    "Windows".
-
-    The result of the dialogue interaction may be a string indicating user
-    input (for input, password, menu, radiolist, pulldown), a list of strings
-    indicating selections of one or more items (for checklist), or a value
-    indicating true or false (for question).
-    """
-
-    # Decide on the desktop environment in use.
-
-    desktop_in_use = use_desktop(desktop)
-
-    # Get the base command.
-
-    cmd = _dialog_commands[desktop_in_use]
-
-    # Get the handler for the command, along with required command options and
-    # the fields that the command expects.
-
-    handler, cmd_options, fields = _dialog_options[desktop_in_use][dialog_type]
-
-    # Form a command list.
-
-    l = [cmd] + cmd_options
-
-    # Process the fields, adding values if found or defaults if available.
-
-    for field in fields:
-        if field[-1].isdigit():
-            n = int(field[-1])
-            field = field[:-1]
-        else:
-            n = 0 # not list
-
-        if options.has_key(field):
-            if n == 0:
-                l.append(str(options[field]))
-            else:
-                values = options[field]
-                for value in values:
-                    if n == 1:
-                        l.append(str(value))
-                    else:
-                        for i in range(0, n):
-                            l.append(str(value[i]))
-        elif _dialog_defaults.has_key(field):
-            l.append(str(_dialog_defaults[field]))
-        else:
-            raise ValueError, "Field '%s' missing from options." % field
-
-    print l
-    return handler(l, 0)
 
 # vim: tabstop=4 expandtab shiftwidth=4
