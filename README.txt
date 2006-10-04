@@ -8,6 +8,16 @@ patch registered in the Python SourceForge project:
 
 http://www.python.org/sf?id=1301512
 
+Some ideas for desktop detection (XFCE) and URL opening (XFCE, X11) were
+obtained from the xdg-utils project which seeks to implement programs
+performing similar functions to those found in the desktop module. The
+xdg-utils project can be found here:
+
+http://portland.freedesktop.org/
+
+Other information regarding desktop icons and menus, screensavers and MIME
+configuration can also be found in xdg-utils.
+
 Contact, Copyright and Licence Information
 ------------------------------------------
 
@@ -33,8 +43,15 @@ KDE           Supports file and URL opening using kfmclient, where the openURL
 
 GNOME         Supports file and URL opening using gnome-open.
 
+XFCE          Supports file and URL opening using exo-open.
+
 ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
+
+New in desktop 0.2.4 (Changes since desktop 0.2.3)
+--------------------------------------------------
+
+  * Added XFCE support.
 
 New in desktop 0.2.3 (Changes since desktop 0.2.2)
 --------------------------------------------------

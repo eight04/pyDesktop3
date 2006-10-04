@@ -131,7 +131,18 @@ def get_desktop():
         return "Mac OS X"
     elif hasattr(os, "startfile"):
         return "Windows"
-    elif os.environ.has_key("DISPLAY"):
+
+    # XFCE detection involves testing the output of a program.
+
+    try:
+        if _readfrom("xprop -root _DT_SAVE_MODE", shell=0).endswith(' = "xfce4"'):
+            return "XFCE"
+    except OSError:
+        pass
+
+    # XFCE runs on X11, so we have to test for X11 last.
+
+    if os.environ.has_key("DISPLAY"):
         return "X11"
     else:
         return None
@@ -162,6 +173,8 @@ def use_desktop(desktop):
         return "KDE"
     elif (desktop or detected) == "GNOME":
         return "GNOME"
+    elif (desktop or detected) == "XFCE":
+        return "XFCE"
     elif (desktop or detected) == "Mac OS X":
         return "Mac OS X"
     elif (desktop or detected) == "X11":
@@ -188,10 +201,11 @@ def open(url, desktop=None, wait=0):
     particular desktop environment's mechanisms to open the 'url' instead of
     guessing or detecting which environment is being used.
 
-    Suggested values for 'desktop' are "standard", "KDE", "GNOME", "Mac OS X",
-    "Windows" where "standard" employs a DESKTOP_LAUNCH environment variable to
-    open the specified 'url'. DESKTOP_LAUNCH should be a command, possibly
-    followed by arguments, and must have any special characters shell-escaped.
+    Suggested values for 'desktop' are "standard", "KDE", "GNOME", "XFCE",
+    "Mac OS X", "Windows" where "standard" employs a DESKTOP_LAUNCH environment
+    variable to open the specified 'url'. DESKTOP_LAUNCH should be a command,
+    possibly followed by arguments, and must have any special characters
+    shell-escaped.
 
     The process identifier of the "opener" (ie. viewer, editor, browser or
     program) associated with the 'url' is returned by this function. If the
@@ -221,8 +235,14 @@ def open(url, desktop=None, wait=0):
     elif desktop_in_use == "GNOME":
         cmd = ["gnome-open", url]
 
+    elif desktop_in_use == "XFCE":
+        cmd = ["exo-open", url]
+
     elif desktop_in_use == "Mac OS X":
         cmd = ["open", url]
+
+    elif desktop_in_use == "X11" and os.environ.has_key("BROWSER"):
+        cmd = [os.environ["BROWSER"], url]
 
     # Finish with an error where no suitable desktop was identified.
 
