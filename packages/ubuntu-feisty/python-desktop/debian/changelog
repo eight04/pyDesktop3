@@ -1,9 +1,9 @@
 desktop (0.2.4-0ubuntu1) feisty; urgency=low
 
-  * Added XFCE support.
+  * Added XFCE support (with advice from Miki Tebeka).
   * Added Ubuntu Feisty (7.04) package support.
 
- -- Paul Boddie <paul@boddie.org.uk>  Mon, 27 Aug 2007 21:32:03 +0200
+ -- Paul Boddie <paul@boddie.org.uk>  Tue, 28 Aug 2007 00:27:37 +0200
 
 desktop (0.2.3-0ubuntu1) hoary; urgency=low
 
