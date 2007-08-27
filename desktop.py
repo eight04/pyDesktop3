@@ -5,7 +5,7 @@ Simple desktop integration for Python. This module provides desktop environment
 detection and resource opening support for a selection of common and
 standardised desktop environments.
 
-Copyright (C) 2005, 2006 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2005, 2006, 2007 Paul Boddie <paul@boddie.org.uk>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

@@ -52,6 +52,7 @@ New in desktop 0.2.4 (Changes since desktop 0.2.3)
 --------------------------------------------------
 
   * Added XFCE support.
+  * Added Ubuntu Feisty (7.04) package support.
 
 New in desktop 0.2.3 (Changes since desktop 0.2.2)
 --------------------------------------------------
