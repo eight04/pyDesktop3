@@ -9,7 +9,7 @@ Package: python2.4-desktop
 Section: python
 Architecture: all
 Depends: python2.4
-Suggests: kde, gnome
+Suggests: kde, gnome, xfce4
 Description: This module provides desktop environment detection and
  resource opening support for a selection of common and standardised
  desktop environments.
