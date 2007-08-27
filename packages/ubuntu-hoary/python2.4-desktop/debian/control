@@ -1,7 +1,7 @@
 Source: desktop
 Priority: optional
 Maintainer: Paul Boddie <paul@boddie.org.uk>
-Build-Depends: debhelper (>> 3.0.0), python2.4-dev
+Build-Depends: debhelper (>> 3.0.0), python2.4-dev, python-epydoc (>= 2.1-6ubuntu1)
 Standards-Version: 3.5.8
 Section: python
 

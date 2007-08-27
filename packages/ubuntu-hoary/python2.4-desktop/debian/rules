@@ -35,6 +35,7 @@ install: build
 
 # Build architecture-independent files here.
 binary-indep: install
+	tools/apidocs.sh
 	dh_testdir
 	dh_testroot
 
