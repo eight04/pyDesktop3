@@ -1,0 +1,18 @@
+Source: desktop
+Section: python
+Priority: optional
+Maintainer: Paul Boddie <paul@boddie.org.uk>
+Build-Depends: debhelper (>= 5.0.38), python-all-dev (>= 2.3.5-11), python-central (>= 0.5.6), python-epydoc (>= 2.1-6ubuntu1)
+XS-Python-Version: all
+Standards-Version: 3.7.2.1
+
+Package: python-desktop
+Architecture: all
+Depends: ${python:Depends}
+Suggests: kde, gnome, xfce4
+Conflicts: python2.4-desktop (<< 0.2.4-0ubuntu1)
+Replaces: python2.4-desktop (<< 0.2.4-0ubuntu1)
+XB-Python-Version: ${python:Versions}
+Description: This module provides desktop environment detection and
+ resource opening support for a selection of common and standardised
+ desktop environments.

@@ -1,0 +1,25 @@
+desktop (0.2.4-0ubuntu1) feisty; urgency=low
+
+  * Added XFCE support.
+  * Added Ubuntu Feisty (7.04) package support.
+
+ -- Paul Boddie <paul@boddie.org.uk>  Mon, 27 Aug 2007 21:32:03 +0200
+
+desktop (0.2.3-0ubuntu1) hoary; urgency=low
+
+  * Added Python 2.3 support (using popen2 instead of
+    subprocess).
+
+ -- Paul Boddie <paul@boddie.org.uk>  Wed, 19 Jul 2006 23:15:54 +0200
+
+desktop (0.2.2-0ubuntu1) hoary; urgency=low
+
+  * Changed the licence to LGPL.
+
+ -- Paul Boddie <paul@boddie.org.uk>  Tue, 13 Jun 2006 00:04:05 +0200
+
+desktop (0.2.1-0ubuntu1) hoary; urgency=low
+
+  * New upstream release.
+
+ -- Paul Boddie <paul@boddie.org.uk>  Thu,  8 Dec 2005 17:12:48 +0100
