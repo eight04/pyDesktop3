@@ -51,7 +51,7 @@ ROX-Filer     Supports file opening using "rox <filename>" but not URL
 New in desktop 0.2.4 (Changes since desktop 0.2.3)
 --------------------------------------------------
 
-  * Added XFCE support.
+  * Added XFCE support (with advice from Miki Tebeka).
   * Added Ubuntu Feisty (7.04) package support.
 
 New in desktop 0.2.3 (Changes since desktop 0.2.2)

@@ -112,6 +112,24 @@ except ImportError:
 
 import commands
 
+# Private functions.
+
+def _is_xfce():
+
+    "Return whether XFCE is in use."
+
+    # XFCE detection involves testing the output of a program.
+
+    try:
+        if not os.environ.get("DISPLAY", "").strip():
+            vars = "DISPLAY=:0.0 "
+        else:
+            vars = ""
+        return _readfrom(vars + "xprop -root _DT_SAVE_MODE", shell=1).endswith(' = "xfce4"')
+
+    except OSError:
+        return 0
+
 # Introspection functions.
 
 def get_desktop():
@@ -131,14 +149,8 @@ def get_desktop():
         return "Mac OS X"
     elif hasattr(os, "startfile"):
         return "Windows"
-
-    # XFCE detection involves testing the output of a program.
-
-    try:
-        if _readfrom("xprop -root _DT_SAVE_MODE", shell=0).endswith(' = "xfce4"'):
-            return "XFCE"
-    except OSError:
-        pass
+    elif _is_xfce():
+        return "XFCE"
 
     # XFCE runs on X11, so we have to test for X11 last.
 
