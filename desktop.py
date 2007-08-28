@@ -125,7 +125,7 @@ def _is_xfce():
             vars = "DISPLAY=:0.0 "
         else:
             vars = ""
-        return _readfrom(vars + "xprop -root _DT_SAVE_MODE", shell=1).endswith(' = "xfce4"')
+        return _readfrom(vars + "xprop -root _DT_SAVE_MODE", shell=1).strip().endswith(' = "xfce4"')
 
     except OSError:
         return 0
