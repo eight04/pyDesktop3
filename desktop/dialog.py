@@ -144,27 +144,34 @@ class MenuItemList(String):
 
 class ListItemList(String):
 
-    "A menu item list parameter."
+    "A radiolist/checklist item list parameter."
+
+    def __init__(self, name, status_first=0):
+        String.__init__(self, name)
+        self.status_first = status_first
 
     def convert(self, value, program):
         l = []
         for v in value:
+            boolean = Boolean(None)
+            status = boolean.convert(v.status, program)
+            if self.status_first:
+                l += status
             l.append(v.value)
             l.append(v.text)
-            boolean = Boolean(None)
-            l.append(boolean.convert(v.status, program))
+            if not self.status_first:
+                l += status
         return l
 
 # Dialogue argument values.
 
 class MenuItem:
-    def __init__(self, value, text):
+
+    "A menu item which can also be used with radiolists and checklists."
+
+    def __init__(self, value, text, status=0):
         self.value = value
         self.text = text
-
-class ListItem(MenuItem):
-    def __init__(self, value, text, status):
-        MenuItem.__init__(self, value, text)
         self.status = status
 
 # Dialogue classes.
@@ -300,19 +307,35 @@ class Menu(Simple):
             String("text"), Integer("height"), Integer("width"), Integer("list_height"), MenuItemList("items")]
             ),
         }
+    item = MenuItem
 
-    def __init__(self, text, titles, items, width=None, height=None, list_height=None):
+    def __init__(self, text, titles, items=None, width=None, height=None, list_height=None):
+
+        """
+        Initialise a menu with the given heading 'text', column 'titles', and
+        optional 'items' (which may be added later), 'width' (in characters),
+        'height' (in characters) and 'list_height' (in items).
+        """
+
         Simple.__init__(self, text, width, height)
         self.titles = titles
-        self.items = items
+        self.items = items or []
         self.list_height = list_height
+
+    def add(self, *args, **kw):
+
+        """
+        Add an item, passing the given arguments to the appropriate item class.
+        """
+
+        self.items.append(self.item(*args, **kw))
 
 class RadioList(Menu):
 
     """
     A list of radio buttons, one of which being selectable.
     Options: text, width (in characters), height (in characters),
-    list_height (in items), items (ListItem objects), titles
+    list_height (in items), items (MenuItem objects), titles
     """
 
     name = "radiolist"
@@ -320,7 +343,7 @@ class RadioList(Menu):
         "kdialog" : (_readfrom, ["--radiolist", String("text"), ListItemList("items")]),
         "zenity" : (_readfrom,
             ["--list", "--radiolist", StringKeyword("--text", "text"), StringKeywords("--column", "titles"),
-            ListItemList("items")]
+            ListItemList("items", 1)]
             ),
         "Xdialog" : (_readfrom, ["--stdout", "--radiolist",
             String("text"), Integer("height"), Integer("width"), Integer("list_height"), ListItemList("items")]
@@ -332,7 +355,7 @@ class CheckList(Menu):
     """
     A list of checkboxes, many being selectable.
     Options: text, width (in characters), height (in characters),
-    list_height (in items), items (ListItem objects), titles
+    list_height (in items), items (MenuItem objects), titles
     """
 
     name = "checklist"
@@ -340,7 +363,7 @@ class CheckList(Menu):
         "kdialog" : (_readfrom, ["--checklist", String("text"), ListItemList("items")]),
         "zenity" : (_readfrom,
             ["--list", "--checklist", StringKeyword("--text", "text"), StringKeywords("--column", "titles"),
-            ListItemList("items")]
+            ListItemList("items", 1)]
             ),
         "Xdialog" : (_readfrom, ["--stdout", "--checklist",
             String("text"), Integer("height"), Integer("width"), Integer("list_height"), ListItemList("items")]
@@ -418,5 +441,9 @@ class TextFile(Simple):
     def __init__(self, text, filename, width=None, height=None):
         Simple.__init__(self, text, width, height)
         self.filename = filename
+
+# Available dialogues.
+
+available = [Question, Warning, Message, Error, Menu, CheckList, RadioList, Input, Password, Pulldown, TextFile]
 
 # vim: tabstop=4 expandtab shiftwidth=4
