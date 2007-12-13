@@ -42,6 +42,42 @@ The dialogue box options are documented in each class's docstring.
 
 from desktop import use_desktop, _run, _readfrom, _status
 
+class _wrapper:
+    def __init__(self, handler):
+        self.handler = handler
+
+class _readvalue(_wrapper):
+    def __call__(self, cmd, shell):
+        return self.handler(cmd, shell).strip()
+
+class _readinput(_wrapper):
+    def __call__(self, cmd, shell):
+        return self.handler(cmd, shell)[:-1]
+
+class _readvalues_kdialog(_wrapper):
+    def __call__(self, cmd, shell):
+        result = self.handler(cmd, shell).strip().strip('"')
+        if result:
+            return result.split('" "')
+        else:
+            return []
+
+class _readvalues_zenity(_wrapper):
+    def __call__(self, cmd, shell):
+        result = self.handler(cmd, shell).strip()
+        if result:
+            return result.split("|")
+        else:
+            return []
+
+class _readvalues_Xdialog(_wrapper):
+    def __call__(self, cmd, shell):
+        result = self.handler(cmd, shell).strip()
+        if result:
+            return result.split("/")
+        else:
+            return []
+
 # Dialogue parameter classes.
 
 class String:
@@ -60,6 +96,17 @@ class Strings(String):
 
     def convert(self, value, program):
         return value or []
+
+class StringPairs(String):
+
+    "Multiple string parameters duplicated to make identifiers."
+
+    def convert(self, value, program):
+        l = []
+        for v in value:
+            l.append(v)
+            l.append(v)
+        return l
 
 class StringKeyword:
 
@@ -95,24 +142,32 @@ class Integer(String):
         "height" : 15,
         "list_height" : 10
         }
+    scale = 8
+
+    def __init__(self, name, pixels=0):
+        String.__init__(self, name)
+        if pixels:
+            self.factor = self.scale
+        else:
+            self.factor = 1
 
     def convert(self, value, program):
         if value is None:
             value = self.defaults[self.name]
-        return [str(int(value))]
+        return [str(int(value) * self.factor)]
 
 class IntegerKeyword(Integer):
 
     "An integer keyword parameter."
 
-    def __init__(self, keyword, name):
+    def __init__(self, keyword, name, pixels=0):
+        Integer.__init__(self, name, pixels)
         self.keyword = keyword
-        self.name = name
 
     def convert(self, value, program):
         if value is None:
             value = self.defaults[self.name]
-        return [self.keyword + "=" + str(int(value))]
+        return [self.keyword + "=" + str(int(value) * self.factor)]
 
 class Boolean(String):
 
@@ -224,7 +279,6 @@ class Dialogue:
                 value = getattr(self, option.name, None)
                 cmd += option.convert(value, program)
 
-        print cmd
         return handler(cmd, 0)
 
 class Simple(Dialogue):
@@ -299,15 +353,16 @@ class Menu(Simple):
 
     name = "menu"
     info = {
-        "kdialog" : (_readfrom, ["--menu", String("text"), MenuItemList("items")]),
-        "zenity" : (_readfrom, ["--list", StringKeyword("--text", "text"), StringKeywords("--column", "titles"),
+        "kdialog" : (_readvalue(_readfrom), ["--menu", String("text"), MenuItemList("items")]),
+        "zenity" : (_readvalue(_readfrom), ["--list", StringKeyword("--text", "text"), StringKeywords("--column", "titles"),
             MenuItemList("items")]
             ),
-        "Xdialog" : (_readfrom, ["--stdout", "--menubox",
+        "Xdialog" : (_readvalue(_readfrom), ["--stdout", "--menubox",
             String("text"), Integer("height"), Integer("width"), Integer("list_height"), MenuItemList("items")]
             ),
         }
     item = MenuItem
+    number_of_titles = 2
 
     def __init__(self, text, titles, items=None, width=None, height=None, list_height=None):
 
@@ -318,7 +373,7 @@ class Menu(Simple):
         """
 
         Simple.__init__(self, text, width, height)
-        self.titles = titles
+        self.titles = ([""] * self.number_of_titles + titles)[-self.number_of_titles:]
         self.items = items or []
         self.list_height = list_height
 
@@ -340,15 +395,16 @@ class RadioList(Menu):
 
     name = "radiolist"
     info = {
-        "kdialog" : (_readfrom, ["--radiolist", String("text"), ListItemList("items")]),
-        "zenity" : (_readfrom,
+        "kdialog" : (_readvalues_kdialog(_readfrom), ["--radiolist", String("text"), ListItemList("items")]),
+        "zenity" : (_readvalues_zenity(_readfrom),
             ["--list", "--radiolist", StringKeyword("--text", "text"), StringKeywords("--column", "titles"),
             ListItemList("items", 1)]
             ),
-        "Xdialog" : (_readfrom, ["--stdout", "--radiolist",
+        "Xdialog" : (_readvalues_Xdialog(_readfrom), ["--stdout", "--radiolist",
             String("text"), Integer("height"), Integer("width"), Integer("list_height"), ListItemList("items")]
             ),
         }
+    number_of_titles = 3
 
 class CheckList(Menu):
 
@@ -360,15 +416,16 @@ class CheckList(Menu):
 
     name = "checklist"
     info = {
-        "kdialog" : (_readfrom, ["--checklist", String("text"), ListItemList("items")]),
-        "zenity" : (_readfrom,
+        "kdialog" : (_readvalues_kdialog(_readfrom), ["--checklist", String("text"), ListItemList("items")]),
+        "zenity" : (_readvalues_zenity(_readfrom),
             ["--list", "--checklist", StringKeyword("--text", "text"), StringKeywords("--column", "titles"),
             ListItemList("items", 1)]
             ),
-        "Xdialog" : (_readfrom, ["--stdout", "--checklist",
+        "Xdialog" : (_readvalues_Xdialog(_readfrom), ["--stdout", "--checklist",
             String("text"), Integer("height"), Integer("width"), Integer("list_height"), ListItemList("items")]
             ),
         }
+    number_of_titles = 3
 
 class Pulldown(Menu):
 
@@ -380,29 +437,35 @@ class Pulldown(Menu):
 
     name = "pulldown"
     info = {
-        "kdialog" : (_readfrom, ["--combobox", String("text"), Strings("items")]),
-        "zenity" : (_readfrom, ["--list", "--radiolist", StringKeyword("--text", "text"), StringKeywords("--column", "titles"),
-            Strings("items")]
+        "kdialog" : (_readvalue(_readfrom), ["--combobox", String("text"), Strings("items")]),
+        "zenity" : (_readvalue(_readfrom),
+            ["--list", "--radiolist", StringKeyword("--text", "text"), StringKeywords("--column", "titles"),
+            StringPairs("items")]
             ),
-        "Xdialog" : (_readfrom, ["--stdout", "--combobox", String("text"), Integer("height"), Integer("width"), Strings("items")]),
+        "Xdialog" : (_readvalue(_readfrom),
+            ["--stdout", "--combobox", String("text"), Integer("height"), Integer("width"), Strings("items")]),
         }
+    item = unicode
+    number_of_titles = 2
 
 class Input(Simple):
 
     """
     An input dialogue, consisting of an input field.
-    Options: text, width (in characters), height (in characters),
-    input
+    Options: text, input, width (in characters), height (in characters)
     """
 
     name = "input"
     info = {
-        "kdialog" : (_readfrom, ["--inputbox", String("text"), String("data")]),
-        "zenity" : (_readfrom, ["--entry", StringKeyword("--text", "text"), StringKeyword("--entry-text", "data")]),
-        "Xdialog" : (_readfrom, ["--stdout", "--inputbox", String("text"), Integer("height"), Integer("width"), String("data")]),
+        "kdialog" : (_readinput(_readfrom),
+            ["--inputbox", String("text"), String("data")]),
+        "zenity" : (_readinput(_readfrom),
+            ["--entry", StringKeyword("--text", "text"), StringKeyword("--entry-text", "data")]),
+        "Xdialog" : (_readinput(_readfrom),
+            ["--stdout", "--inputbox", String("text"), Integer("height"), Integer("width"), String("data")]),
         }
 
-    def __init__(self, text, data, width=None, height=None):
+    def __init__(self, text, data="", width=None, height=None):
         Simple.__init__(self, text, width, height)
         self.data = data
 
@@ -410,35 +473,36 @@ class Password(Input):
 
     """
     A password dialogue, consisting of a password entry field.
-    Options: text, width (in characters), height (in characters),
-    input
+    Options: text, width (in characters), height (in characters)
     """
 
     name = "password"
     info = {
-        "kdialog" : (_readfrom, ["--password", String("text")]),
-        "zenity" : (_readfrom, ["--password", StringKeyword("--text", "text"), "--hide-text"]),
-        "Xdialog" : (_readfrom, ["--stdout", "--password", "--inputbox", String("text"), Integer("height"), Integer("width")]),
+        "kdialog" : (_readinput(_readfrom),
+            ["--password", String("text")]),
+        "zenity" : (_readinput(_readfrom),
+            ["--entry", StringKeyword("--text", "text"), "--hide-text"]),
+        "Xdialog" : (_readinput(_readfrom),
+            ["--stdout", "--password", "--inputbox", String("text"), Integer("height"), Integer("width")]),
         }
 
 class TextFile(Simple):
 
     """
     A text file input box.
-    Options: text, width (in characters), height (in characters),
-    filename
+    Options: filename, text, width (in characters), height (in characters)
     """
 
     name = "textfile"
     info = {
-        "kdialog" : (_readfrom, ["--textbox", String("filename"), String("width"), String("height")]),
-        "zenity" : (_readfrom, ["--textbox", StringKeyword("--filename", "filename"), IntegerKeyword("--width", "width"),
-            IntegerKeyword("--height", "height")]
+        "kdialog" : (_readfrom, ["--textbox", String("filename"), Integer("width", pixels=1), Integer("height", pixels=1)]),
+        "zenity" : (_readfrom, ["--text-info", StringKeyword("--filename", "filename"), IntegerKeyword("--width", "width", pixels=1),
+            IntegerKeyword("--height", "height", pixels=1)]
             ),
-        "Xdialog" : (_readfrom, ["--stdout", "--textbox", String("text"), Integer("height"), Integer("width")]),
+        "Xdialog" : (_readfrom, ["--stdout", "--textbox", String("filename"), Integer("height"), Integer("width")]),
         }
 
-    def __init__(self, text, filename, width=None, height=None):
+    def __init__(self, filename, text="", width=None, height=None):
         Simple.__init__(self, text, width, height)
         self.filename = filename
 
