@@ -13,6 +13,5 @@ Suggests: kde, gnome, xfce4
 Conflicts: python2.4-desktop (<< 0.2.4-0ubuntu1)
 Replaces: python2.4-desktop (<< 0.2.4-0ubuntu1)
 XB-Python-Version: ${python:Versions}
-Description: This module provides desktop environment detection and
- resource opening support for a selection of common and standardised
- desktop environments.
+Description: Desktop environment detection, inspection; support for opening dialogues and resources.
+ A selection of common and standardised desktop environments are supported.
