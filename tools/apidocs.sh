@@ -1,3 +1,3 @@
 #!/bin/sh
 
-epydoc --docformat=plaintext -o apidocs desktop.py
+epydoc --docformat=plaintext -o apidocs desktop
