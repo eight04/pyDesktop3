@@ -1,3 +1,13 @@
+desktop (0.3-0ubuntu1) hoary; urgency=low
+
+  * Made desktop a package.
+  * Added support for graphical dialogue boxes through
+    programs such as kdialog, zenity and Xdialog.
+  * Added support for inspecting desktop windows (currently
+    only for X11).
+
+ -- Paul Boddie <paul@boddie.org.uk>  Sat, 15 Dec 2007 19:47:30 +0100
+
 desktop (0.2.4-0ubuntu1) hoary; urgency=low
 
   * Added XFCE support (with advice from Miki Tebeka).

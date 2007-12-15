@@ -26,11 +26,14 @@ set -e
 PACKAGE=python2.4-desktop
 VERSION=2.4
 LIB="/usr/lib/python$VERSION"
+DIRLIST="$LIB/site-packages/desktop"
 
 case "$1" in
     configure|abort-upgrade|abort-remove|abort-deconfigure)
-        /usr/bin/python$VERSION -O -c "import desktop"
-        /usr/bin/python$VERSION -c "import desktop"
+        for i in $DIRLIST ; do
+            /usr/bin/python$VERSION -O $LIB/compileall.py -q $i
+            /usr/bin/python$VERSION $LIB/compileall.py -q $i
+        done
     ;;
 
     *)

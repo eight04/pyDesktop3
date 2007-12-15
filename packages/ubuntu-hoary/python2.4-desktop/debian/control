@@ -10,8 +10,7 @@ Section: python
 Architecture: all
 Depends: python2.4
 Suggests: kde, gnome, xfce4
-Description: This module provides desktop environment detection and
- resource opening support for a selection of common and standardised
- desktop environments.
+Description: Desktop environment detection, inspection; support for opening dialogues and resources.
+ A selection of common and standardised desktop environments are supported.
  .
  This package is built for Python 2.4.x.

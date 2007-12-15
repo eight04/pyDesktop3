@@ -6,11 +6,13 @@ set -e
 PACKAGE=python2.4-desktop
 VERSION=2.4
 LIB="/usr/lib/python$VERSION"
-DIR="$LIB/site-packages"
+DIRLIST="$LIB/site-packages/desktop"
 
 case "$1" in
     remove|upgrade|failed-upgrade)
-        rm ${DIR}/desktop.py[co]
+        for i in $DIRLIST ; do
+            find $i -name '*.py[co]' -exec rm \{\} \;
+        done
     ;;
 
     *)
