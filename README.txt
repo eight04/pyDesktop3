@@ -48,6 +48,14 @@ XFCE          Supports file and URL opening using exo-open.
 ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
 
+New in desktop 0.3 (Changes since desktop 0.2.4)
+------------------------------------------------
+
+  * Made desktop a package.
+  * Added support for graphical dialogue boxes through programs such as
+    kdialog, zenity and Xdialog.
+  * Added support for inspecting desktop windows (currently only for X11).
+
 New in desktop 0.2.4 (Changes since desktop 0.2.3)
 --------------------------------------------------
 

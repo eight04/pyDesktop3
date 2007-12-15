@@ -11,5 +11,5 @@ setup(
     author_email = "paul@boddie.org.uk",
     url          = "http://www.python.org/pypi/desktop",
     version      = desktop.__version__,
-    py_modules   = ["desktop"]
+    packages     = ["desktop"]
     )

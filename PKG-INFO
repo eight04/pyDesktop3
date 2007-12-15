@@ -1,18 +1,17 @@
 Metadata-Version: 1.1
 Name: desktop
-Version: 0.2.4
+Version: 0.3
 Author: Paul Boddie
 Author-email: paul at boddie org uk
 Maintainer: Paul Boddie
 Maintainer-email: paul at boddie org uk
 Home-page: http://bugs.python.org/issue1301512
-Download-url: http://www.boddie.org.uk/python/downloads/desktop-0.2.4.tar.gz
+Download-url: http://www.boddie.org.uk/python/downloads/desktop-0.3.tar.gz
 Summary: Simple desktop integration for Python
 License: LGPL
-Description: This module provides desktop environment detection and resource
-        opening support for a selection of common and standardised desktop
-        environments.
-Keywords: desktop startfile DESKTOP_LAUNCH KDE GNOME XFCE XFCE4
+Description: Desktop environment detection, inspection; support for opening dialogues and resources.
+        A selection of common and standardised desktop environments are supported.
+Keywords: desktop startfile DESKTOP_LAUNCH KDE GNOME XFCE XFCE4 dialog kdialog zenity Xdialog X11
 Platform: Any
 Classifier: Environment :: MacOS X
 Classifier: Environment :: Other Environment
