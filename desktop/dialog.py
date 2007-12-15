@@ -3,7 +3,7 @@
 """
 Simple desktop dialogue box support for Python.
 
-Copyright (C) 2005, 2006, 2007 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2007 Paul Boddie <paul@boddie.org.uk>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -38,6 +38,9 @@ question.open("KDE") # Insists on KDE
 question.open("GNOME") # Insists on GNOME
 
 The dialogue box options are documented in each class's docstring.
+
+Available dialogue box classes are listed in the desktop.dialog.available
+attribute.
 """
 
 from desktop import use_desktop, _run, _readfrom, _status
