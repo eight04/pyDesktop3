@@ -264,6 +264,10 @@ class Dialogue:
         indicating selections of one or more items (for RadioList, CheckList),
         or a value indicating true or false (for Question, Warning, Message,
         Error).
+
+        Where a string value may be expected but no choice is made, an empty
+        string may be returned. Similarly, where a list of values is expected
+        but no choice is made, an empty list may be returned.
         """
 
         # Decide on the desktop environment in use.
@@ -518,7 +522,8 @@ class TextFile(Simple):
     """
     A text file input box.
     Options: filename, text, width (in characters), height (in characters)
-    Response: any text returned by the dialogue program
+    Response: any text returned by the dialogue program (typically an empty
+              string)
     """
 
     name = "textfile"
