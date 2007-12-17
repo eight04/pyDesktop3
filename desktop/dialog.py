@@ -29,7 +29,7 @@ the automatic detection of that environment, use the appropriate dialogue box
 class:
 
 question = desktop.dialog.Question("Are you sure?")
-question.open()
+result = question.open()
 
 To override the detected desktop, specify the desktop parameter to the open
 function as follows:
@@ -40,6 +40,9 @@ question.open("GNOME") # Insists on GNOME
 The dialogue box options are documented in each class's docstring.
 
 Available dialogue box classes are listed in the desktop.dialog.available
+attribute.
+
+Supported desktop environments are listed in the desktop.dialog.supported
 attribute.
 """
 
@@ -239,6 +242,7 @@ class Dialogue:
     commands = {
         "KDE" : "kdialog",
         "GNOME" : "zenity",
+        "XFCE" : "zenity", # NOTE: Based on observations with Xubuntu.
         "X11" : "Xdialog"
         }
 
@@ -248,17 +252,18 @@ class Dialogue:
         Open a dialogue box (dialog) using a program appropriate to the desktop
         environment in use.
 
-        If the optional 'desktop' parameter is specified then attempt to use that
-        particular desktop environment's mechanisms to open the dialog instead of
-        guessing or detecting which environment is being used.
+        If the optional 'desktop' parameter is specified then attempt to use
+        that particular desktop environment's mechanisms to open the dialog
+        instead of guessing or detecting which environment is being used.
 
-        Suggested values for 'desktop' are "standard", "KDE", "GNOME", "Mac OS X",
-        "Windows".
+        Suggested values for 'desktop' are "standard", "KDE", "GNOME",
+        "Mac OS X", "Windows".
 
         The result of the dialogue interaction may be a string indicating user
-        input (for input, password, menu, radiolist, pulldown), a list of strings
-        indicating selections of one or more items (for checklist), or a value
-        indicating true or false (for question).
+        input (for Input, Password, Menu, Pulldown), a list of strings
+        indicating selections of one or more items (for RadioList, CheckList),
+        or a value indicating true or false (for Question, Warning, Message,
+        Error).
         """
 
         # Decide on the desktop environment in use.
@@ -271,6 +276,9 @@ class Dialogue:
             program = self.commands[desktop_in_use]
         except KeyError:
             raise OSError, "Desktop '%s' not supported (no known dialogue box command could be suggested)" % desktop_in_use
+
+        # The handler is one of the functions communicating with the subprocess.
+        # Some handlers return boolean values, others strings.
 
         handler, options = self.info[program]
 
@@ -295,6 +303,8 @@ class Question(Simple):
     """
     A dialogue asking a question and showing response buttons.
     Options: text, width (in characters), height (in characters)
+    Response: a boolean value indicating an affirmative response (true) or a
+              negative response
     """
 
     name = "question"
@@ -309,6 +319,8 @@ class Warning(Simple):
     """
     A dialogue asking a question and showing response buttons.
     Options: text, width (in characters), height (in characters)
+    Response: a boolean value indicating an affirmative response (true) or a
+              negative response
     """
 
     name = "warning"
@@ -323,6 +335,8 @@ class Message(Simple):
     """
     A message dialogue.
     Options: text, width (in characters), height (in characters)
+    Response: a boolean value indicating an affirmative response (true) or a
+              negative response
     """
 
     name = "message"
@@ -337,6 +351,8 @@ class Error(Simple):
     """
     An error dialogue.
     Options: text, width (in characters), height (in characters)
+    Response: a boolean value indicating an affirmative response (true) or a
+              negative response
     """
 
     name = "error"
@@ -351,7 +367,8 @@ class Menu(Simple):
     """
     A menu of options, one of which being selectable.
     Options: text, width (in characters), height (in characters),
-    list_height (in items), items (MenuItem objects)
+             list_height (in items), items (MenuItem objects)
+    Response: a value corresponding to the chosen item
     """
 
     name = "menu"
@@ -393,7 +410,10 @@ class RadioList(Menu):
     """
     A list of radio buttons, one of which being selectable.
     Options: text, width (in characters), height (in characters),
-    list_height (in items), items (MenuItem objects), titles
+             list_height (in items), items (MenuItem objects), titles
+    Response: a list of values corresponding to chosen items (since some
+              programs, eg. zenity, appear to support multiple default
+              selections)
     """
 
     name = "radiolist"
@@ -414,7 +434,8 @@ class CheckList(Menu):
     """
     A list of checkboxes, many being selectable.
     Options: text, width (in characters), height (in characters),
-    list_height (in items), items (MenuItem objects), titles
+             list_height (in items), items (MenuItem objects), titles
+    Response: a list of values corresponding to chosen items
     """
 
     name = "checklist"
@@ -435,7 +456,8 @@ class Pulldown(Menu):
     """
     A pull-down menu of options, one of which being selectable.
     Options: text, width (in characters), height (in characters),
-    entries (list of values)
+             items (list of values)
+    Response: a value corresponding to the chosen item
     """
 
     name = "pulldown"
@@ -456,6 +478,7 @@ class Input(Simple):
     """
     An input dialogue, consisting of an input field.
     Options: text, input, width (in characters), height (in characters)
+    Response: the text entered into the dialogue by the user
     """
 
     name = "input"
@@ -477,6 +500,7 @@ class Password(Input):
     """
     A password dialogue, consisting of a password entry field.
     Options: text, width (in characters), height (in characters)
+    Response: the text entered into the dialogue by the user
     """
 
     name = "password"
@@ -494,6 +518,7 @@ class TextFile(Simple):
     """
     A text file input box.
     Options: filename, text, width (in characters), height (in characters)
+    Response: any text returned by the dialogue program
     """
 
     name = "textfile"
@@ -512,5 +537,9 @@ class TextFile(Simple):
 # Available dialogues.
 
 available = [Question, Warning, Message, Error, Menu, CheckList, RadioList, Input, Password, Pulldown, TextFile]
+
+# Supported desktop environments.
+
+supported = Dialogue.commands.keys()
 
 # vim: tabstop=4 expandtab shiftwidth=4
