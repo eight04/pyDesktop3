@@ -1,3 +1,10 @@
+desktop (0.3.1-0ubuntu1) hoary; urgency=low
+
+  * Improved docstrings.
+  * Fixed support for examining the root window.
+
+ -- Paul Boddie <paul@boddie.org.uk>  Wed, 15 Oct 2008 23:11:12 +0200
+
 desktop (0.3-0ubuntu1) hoary; urgency=low
 
   * Made desktop a package.
