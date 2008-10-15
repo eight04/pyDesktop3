@@ -72,11 +72,17 @@ class Window:
     def __repr__(self):
         return "Window(%r)" % self.identifier
 
+    def _get_identifier(self):
+        if self.identifier is None:
+            return "-root"
+        else:
+            return "-id " + self.identifier
+
     def children(self):
 
         "Return a list of windows which are children of this window."
 
-        s = _readfrom(_get_x11_vars() + "xwininfo -id %s -children" % self.identifier, shell=1)
+        s = _readfrom(_get_x11_vars() + "xwininfo %s -children" % self._get_identifier(), shell=1)
         handles = []
         adding = 0
         for line in s.split("\n"):
@@ -90,7 +96,7 @@ class Window:
 
         "Return the name of the window."
 
-        s = _readfrom(_get_x11_vars() + "xwininfo -id %s -stats" % self.identifier, shell=1)
+        s = _readfrom(_get_x11_vars() + "xwininfo %s -stats" % self._get_identifier(), shell=1)
         for line in s.split("\n"):
             if line.startswith("xwininfo:"):
 
@@ -110,7 +116,7 @@ class Window:
 
         "Return a tuple containing the width and height of this window."
 
-        s = _readfrom(_get_x11_vars() + "xwininfo -id %s -stats" % self.identifier, shell=1)
+        s = _readfrom(_get_x11_vars() + "xwininfo %s -stats" % self._get_identifier(), shell=1)
         d = _xwininfo(s)
         return _get_int_properties(d, ["Width", "Height"])
 
@@ -118,7 +124,7 @@ class Window:
 
         "Return a tuple containing the upper left co-ordinates of this window."
 
-        s = _readfrom(_get_x11_vars() + "xwininfo -id %s -stats" % self.identifier, shell=1)
+        s = _readfrom(_get_x11_vars() + "xwininfo %s -stats" % self._get_identifier(), shell=1)
         d = _xwininfo(s)
         return _get_int_properties(d, ["Absolute upper-left X", "Absolute upper-left Y"])
 
@@ -137,7 +143,10 @@ def list(desktop=None):
         s = _readfrom(_get_x11_vars() + "xlsclients -a -l", shell=1)
         prefix = "Window "
         prefix_end = len(prefix)
-        handles = []
+
+        # Include the root window.
+
+        handles = [None]
 
         for line in s.split("\n"):
             if line.startswith(prefix):

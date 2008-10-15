@@ -5,7 +5,7 @@ Simple desktop integration for Python. This module provides desktop environment
 detection and resource opening support for a selection of common and
 standardised desktop environments.
 
-Copyright (C) 2005, 2006, 2007 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2005, 2006, 2007, 2008 Paul Boddie <paul@boddie.org.uk>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -66,9 +66,15 @@ DESKTOP_LAUNCH="my\ opener --url"       Should run the "my opener" program to
 
 Details of the DESKTOP_LAUNCH environment variable convention can be found here:
 http://lists.freedesktop.org/archives/xdg/2004-August/004489.html
+
+Other Modules
+-------------
+
+The desktop.dialog module provides support for opening dialogue boxes.
+The desktop.windows module permits the inspection of desktop windows.
 """
 
-__version__ = "0.3"
+__version__ = "0.3.1"
 
 import os
 import sys
