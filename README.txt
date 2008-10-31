@@ -27,10 +27,7 @@ contacted at the following e-mail address:
 paul@boddie.org.uk
 
 Copyright and licence information can be found in the docs directory - see
-docs/COPYING.txt and docs/LICENCE.txt for more information. Whilst I would
-prefer to release my software under the LGPL or GPL, the Python Software
-Foundation insists on other licences, and I have chosen one of those in the
-hope that this module becomes a part of the Python standard library.
+docs/COPYING.txt and docs/LICENCE.txt for more information.
 
 Notes
 -----
