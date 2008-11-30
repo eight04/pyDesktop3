@@ -3,7 +3,7 @@
 """
 Simple desktop window enumeration for Python.
 
-Copyright (C) 2007 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2007, 2008 Paul Boddie <paul@boddie.org.uk>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -27,6 +27,11 @@ Finding Open Windows on the Desktop
 To obtain a list of windows, use the desktop.windows.list function as follows:
 
 windows = desktop.windows.list()
+
+To obtain the root window, typically the desktop background, use the
+desktop.windows.root function as follows:
+
+root = desktop.windows.root()
 
 Each window object can be inspected through a number of methods. For example:
 
@@ -155,5 +160,21 @@ def list(desktop=None):
         raise OSError, "Desktop '%s' not supported" % use_desktop(desktop)
 
     return [Window(handle) for handle in handles]
+
+def root(desktop=None):
+
+    """
+    Return the root window for the current desktop. If the optional 'desktop'
+    parameter is specified then attempt to use that particular desktop
+    environment's mechanisms to look for windows.
+    """
+
+    # NOTE: The desktop parameter is currently ignored and X11 is tested for
+    # NOTE: directly.
+
+    if _is_x11():
+        return Window(None)
+    else:
+        raise OSError, "Desktop '%s' not supported" % use_desktop(desktop)
 
 # vim: tabstop=4 expandtab shiftwidth=4
