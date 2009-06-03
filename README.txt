@@ -97,7 +97,7 @@ Check the release information in the PKG-INFO file.
 Check the setup.py file.
 Tag, export.
 Archive, upload.
-Update PyPI, PythonInfo Wiki, Vaults of Parnassus entries.
+Update PyPI entry.
 
 Making Packages
 ---------------

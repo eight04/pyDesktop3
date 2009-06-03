@@ -3,7 +3,7 @@
 """
 Simple desktop window enumeration for Python.
 
-Copyright (C) 2007, 2008 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2007, 2008, 2009 Paul Boddie <paul@boddie.org.uk>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -44,6 +44,9 @@ See the desktop.windows.Window class for more information.
 """
 
 from desktop import _is_x11, _get_x11_vars, _readfrom, use_desktop
+import re
+
+# System functions.
 
 def _xwininfo(s):
     d = {}
@@ -51,15 +54,26 @@ def _xwininfo(s):
         fields = line.split(":")
         if len(fields) < 2:
             continue
-        key, values = fields[0].strip(), fields[1:]
-        d[key] = values
+        key, value = fields[0].strip(), ":".join(fields[1:]).strip()
+        d[key] = value
     return d
 
 def _get_int_properties(d, properties):
     results = []
     for property in properties:
-        results.append(int(d[property][0].strip()))
+        results.append(int(d[property]))
     return results
+
+# Finder functions.
+
+def find_all(name):
+    return 1
+
+def find_named(name):
+    return name is not None
+
+def find_by_name(name):
+    return lambda n, t=name: n == t
 
 # Window classes.
 # NOTE: X11 is the only supported desktop so far.
@@ -68,52 +82,118 @@ class Window:
 
     "A window on the desktop."
 
+    _name_pattern = re.compile(r':\s+\(.*?\)\s+[-0-9x+]+\s+[-0-9+]+$')
+
     def __init__(self, identifier):
 
         "Initialise the window with the given 'identifier'."
 
         self.identifier = identifier
 
+        # Finder methods (from above).
+
+        self.find_all = find_all
+        self.find_named = find_named
+        self.find_by_name = find_by_name
+
     def __repr__(self):
         return "Window(%r)" % self.identifier
 
-    def _get_identifier(self):
+    # Methods which deal with the underlying commands.
+
+    def _get_identifier_args(self):
         if self.identifier is None:
             return "-root"
         else:
             return "-id " + self.identifier
 
-    def children(self):
+    def _get_command_output(self, action):
+        return _readfrom(_get_x11_vars() + "xwininfo %s -%s" % (self._get_identifier_args(), action), shell=1)
 
-        "Return a list of windows which are children of this window."
+    def _get_handle_and_name(self, text):
+        fields = text.strip().split(" ")
+        handle = fields[0]
 
-        s = _readfrom(_get_x11_vars() + "xwininfo %s -children" % self._get_identifier(), shell=1)
+        # Get the "<name>" part, stripping off the quotes.
+
+        name = " ".join(fields[1:])
+        if len(name) > 1 and name[0] == '"' and name[-1] == '"':
+            name = name[1:-1]
+
+        if name == "(has no name)":
+            return handle, None
+        else:
+            return handle, name
+
+    def _get_this_handle_and_name(self, line):
+        fields = line.split(":")
+        return self._get_handle_and_name(":".join(fields[2:]))
+
+    def _get_descendant_handle_and_name(self, line):
+        match = self._name_pattern.search(line)
+        if match:
+            return self._get_handle_and_name(line[:match.start()].strip())
+        else:
+            raise OSError, "Window information from %r did not contain window details." % line
+
+    def _descendants(self, s, fn):
         handles = []
         adding = 0
         for line in s.split("\n"):
-            if not adding and line.endswith("children:"):
-                adding = 1
+            if line.endswith("child:") or line.endswith("children:"):
+                if not adding:
+                    adding = 1
             elif adding and line:
-                handles.append(line.strip().split()[0])
+                handle, name = self._get_descendant_handle_and_name(line)
+                if fn(name):
+                    handles.append(handle)
         return [Window(handle) for handle in handles]
+
+    # Public methods.
+
+    def children(self, all=0):
+
+        """
+        Return a list of windows which are children of this window. If the
+        optional 'all' parameter is set to a true value, all such windows will
+        be returned regardless of whether they have any name information.
+        """
+
+        s = self._get_command_output("children")
+        return self._descendants(s, all and self.find_all or self.find_named)
+
+    def descendants(self, all=0):
+
+        """
+        Return a list of windows which are descendants of this window. If the
+        optional 'all' parameter is set to a true value, all such windows will
+        be returned regardless of whether they have any name information.
+        """
+
+        s = self._get_command_output("tree")
+        return self._descendants(s, all and self.find_all or self.find_named)
+
+    def find(self, callable):
+
+        """
+        Return windows using the given 'callable' (returning a true or a false
+        value when invoked with a window name) for descendants of this window.
+        """
+
+        s = self._get_command_output("tree")
+        return self._descendants(s, callable)
 
     def name(self):
 
         "Return the name of the window."
 
-        s = _readfrom(_get_x11_vars() + "xwininfo %s -stats" % self._get_identifier(), shell=1)
+        s = self._get_command_output("stats")
         for line in s.split("\n"):
             if line.startswith("xwininfo:"):
 
                 # Format is 'xwininfo: Window id: <handle> "<name>"
 
-                fields = line.split(":")
-                handle_and_name = fields[2].strip()
-                fields2 = handle_and_name.split(" ")
-
-                # Get the "<name>" part, stripping off the quotes.
-
-                return " ".join(fields2[1:]).strip('"')
+                return self._get_this_handle_and_name(line)[1]
 
         return None
 
@@ -121,7 +201,7 @@ class Window:
 
         "Return a tuple containing the width and height of this window."
 
-        s = _readfrom(_get_x11_vars() + "xwininfo %s -stats" % self._get_identifier(), shell=1)
+        s = self._get_command_output("stats")
         d = _xwininfo(s)
         return _get_int_properties(d, ["Width", "Height"])
 
@@ -129,9 +209,17 @@ class Window:
 
         "Return a tuple containing the upper left co-ordinates of this window."
 
-        s = _readfrom(_get_x11_vars() + "xwininfo %s -stats" % self._get_identifier(), shell=1)
+        s = self._get_command_output("stats")
         d = _xwininfo(s)
         return _get_int_properties(d, ["Absolute upper-left X", "Absolute upper-left Y"])
+
+    def visible(self):
+
+        "Return whether the window is in some way visible."
+
+        s = self._get_command_output("stats")
+        d = _xwininfo(s)
+        return d["Map State"] != "IsUnviewable"
 
 def list(desktop=None):
 
@@ -141,25 +229,10 @@ def list(desktop=None):
     environment's mechanisms to look for windows.
     """
 
-    # NOTE: The desktop parameter is currently ignored and X11 is tested for
-    # NOTE: directly.
-
-    if _is_x11():
-        s = _readfrom(_get_x11_vars() + "xlsclients -a -l", shell=1)
-        prefix = "Window "
-        prefix_end = len(prefix)
-
-        # Include the root window.
-
-        handles = [None]
-
-        for line in s.split("\n"):
-            if line.startswith(prefix):
-                handles.append(line[prefix_end:-1]) # NOTE: Assume ":" at end.
-    else:
-        raise OSError, "Desktop '%s' not supported" % use_desktop(desktop)
-
-    return [Window(handle) for handle in handles]
+    root_window = root(desktop)
+    window_list = [window for window in root_window.descendants() if window.visible()]
+    window_list.insert(0, root_window)
+    return window_list
 
 def root(desktop=None):
 
@@ -176,5 +249,15 @@ def root(desktop=None):
         return Window(None)
     else:
         raise OSError, "Desktop '%s' not supported" % use_desktop(desktop)
+
+def find(callable, desktop=None):
+
+    """
+    Find and return windows using the given 'callable' for the current desktop.
+    If the optional 'desktop' parameter is specified then attempt to use that
+    particular desktop environment's mechanisms to look for windows.
+    """
+
+    return root(desktop).find(callable)
 
 # vim: tabstop=4 expandtab shiftwidth=4
