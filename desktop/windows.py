@@ -48,15 +48,31 @@ import re
 
 # System functions.
 
-def _xwininfo(s):
-    d = {}
-    for line in s.split("\n"):
-        fields = line.split(":")
-        if len(fields) < 2:
-            continue
-        key, value = fields[0].strip(), ":".join(fields[1:]).strip()
-        d[key] = value
-    return d
+def _xwininfo(identifier, action):
+    if identifier is None:
+        args = "-root"
+    else:
+        args = "-id " + identifier
+
+    s = _readfrom(_get_x11_vars() + "xwininfo %s -%s" % (args, action), shell=1)
+
+    # Return a mapping of keys to values for the "stats" action.
+
+    if action == "stats":
+        d = {}
+        for line in s.split("\n"):
+            fields = line.split(":")
+            if len(fields) < 2:
+                continue
+            key, value = fields[0].strip(), ":".join(fields[1:]).strip()
+            d[key] = value
+
+        return d
+
+    # Otherwise, return the raw output.
+
+    else:
+        return s
 
 def _get_int_properties(d, properties):
     results = []
@@ -102,15 +118,6 @@ class Window:
 
     # Methods which deal with the underlying commands.
 
-    def _get_identifier_args(self):
-        if self.identifier is None:
-            return "-root"
-        else:
-            return "-id " + self.identifier
-
-    def _get_command_output(self, action):
-        return _readfrom(_get_x11_vars() + "xwininfo %s -%s" % (self._get_identifier_args(), action), shell=1)
-
     def _get_handle_and_name(self, text):
         fields = text.strip().split(" ")
         handle = fields[0]
@@ -128,7 +135,7 @@ class Window:
 
     def _get_this_handle_and_name(self, line):
         fields = line.split(":")
-        return self._get_handle_and_name(":".join(fields[2:]))
+        return self._get_handle_and_name(":".join(fields[1:]))
 
     def _get_descendant_handle_and_name(self, line):
         match = self._name_pattern.search(line)
@@ -160,7 +167,7 @@ class Window:
         be returned regardless of whether they have any name information.
         """
 
-        s = self._get_command_output("children")
+        s = _xwininfo(self.identifier, "children")
         return self._descendants(s, all and self.find_all or self.find_named)
 
     def descendants(self, all=0):
@@ -171,7 +178,7 @@ class Window:
         be returned regardless of whether they have any name information.
         """
 
-        s = self._get_command_output("tree")
+        s = _xwininfo(self.identifier, "tree")
         return self._descendants(s, all and self.find_all or self.find_named)
 
     def find(self, callable):
@@ -181,37 +188,31 @@ class Window:
         value when invoked with a window name) for descendants of this window.
         """
 
-        s = self._get_command_output("tree")
+        s = _xwininfo(self.identifier, "tree")
         return self._descendants(s, callable)
 
     def name(self):
 
         "Return the name of the window."
 
-        s = self._get_command_output("stats")
-        for line in s.split("\n"):
-            if line.startswith("xwininfo:"):
+        d = _xwininfo(self.identifier, "stats")
 
-                # Format is 'xwininfo: Window id: <handle> "<name>"
+        # Format is 'xwininfo: Window id: <handle> "<name>"
 
-                return self._get_this_handle_and_name(line)[1]
-
-        return None
+        return self._get_this_handle_and_name(d["xwininfo"])[1]
 
     def size(self):
 
         "Return a tuple containing the width and height of this window."
 
-        s = self._get_command_output("stats")
-        d = _xwininfo(s)
+        d = _xwininfo(self.identifier, "stats")
         return _get_int_properties(d, ["Width", "Height"])
 
     def position(self):
 
         "Return a tuple containing the upper left co-ordinates of this window."
 
-        s = self._get_command_output("stats")
-        d = _xwininfo(s)
+        d = _xwininfo(self.identifier, "stats")
         return _get_int_properties(d, ["Absolute upper-left X", "Absolute upper-left Y"])
 
     def displayed(self):
@@ -221,16 +222,14 @@ class Window:
         visible on the current screen).
         """
 
-        s = self._get_command_output("stats")
-        d = _xwininfo(s)
+        d = _xwininfo(self.identifier, "stats")
         return d["Map State"] != "IsUnviewable"
 
     def visible(self):
 
         "Return whether the window is displayed and visible."
 
-        s = self._get_command_output("stats")
-        d = _xwininfo(s)
+        d = _xwininfo(self.identifier, "stats")
         return d["Map State"] == "IsViewable"
 
 def list(desktop=None):
