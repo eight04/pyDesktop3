@@ -83,6 +83,7 @@ class Window:
     "A window on the desktop."
 
     _name_pattern = re.compile(r':\s+\(.*?\)\s+[-0-9x+]+\s+[-0-9+]+$')
+    _absent_names = "(has no name)", "(the root window) (has no name)"
 
     def __init__(self, identifier):
 
@@ -120,7 +121,7 @@ class Window:
         if len(name) > 1 and name[0] == '"' and name[-1] == '"':
             name = name[1:-1]
 
-        if name == "(has no name)":
+        if name in self._absent_names:
             return handle, None
         else:
             return handle, name
@@ -213,13 +214,24 @@ class Window:
         d = _xwininfo(s)
         return _get_int_properties(d, ["Absolute upper-left X", "Absolute upper-left Y"])
 
-    def visible(self):
+    def displayed(self):
 
-        "Return whether the window is in some way visible."
+        """
+        Return whether the window is displayed in some way (but not necessarily
+        visible on the current screen).
+        """
 
         s = self._get_command_output("stats")
         d = _xwininfo(s)
         return d["Map State"] != "IsUnviewable"
+
+    def visible(self):
+
+        "Return whether the window is displayed and visible."
+
+        s = self._get_command_output("stats")
+        d = _xwininfo(s)
+        return d["Map State"] == "IsViewable"
 
 def list(desktop=None):
 
@@ -230,7 +242,7 @@ def list(desktop=None):
     """
 
     root_window = root(desktop)
-    window_list = [window for window in root_window.descendants() if window.visible()]
+    window_list = [window for window in root_window.descendants() if window.displayed()]
     window_list.insert(0, root_window)
     return window_list
 
