@@ -1,9 +1,10 @@
-desktop (0.3.1-0ubuntu1) hoary; urgency=low
+desktop (0.4-0ubuntu1) hoary; urgency=low
 
   * Improved docstrings.
   * Fixed support for examining the root window.
+  * Changed the licence to the LGPL version 3 (or later).
 
- -- Paul Boddie <paul@boddie.org.uk>  Wed, 15 Oct 2008 23:11:12 +0200
+ -- Paul Boddie <paul@boddie.org.uk>  Sun, 21 Jun 2009 22:45:13 +0200
 
 desktop (0.3-0ubuntu1) hoary; urgency=low
 

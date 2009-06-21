@@ -1,12 +1,29 @@
 Introduction
 ------------
 
-The desktop module provides desktop environment detection and resource opening
-support for a selection of common and standardised desktop environments. See
-the module docstring for a more extensive introduction. See also the following
-patch registered in the Python SourceForge project:
+The desktop package provides desktop environment detection and resource
+opening support for a selection of common and standardised desktop
+environments.
 
-http://www.python.org/sf?id=1301512
+Currently, in Python's standard library, there is apparently no coherent,
+cross-platform way of getting the user's environment to "open" files or
+resources (showing such files in browsers or editors, for example) when
+requested by a Python program. There is an os.startfile function which works
+for Windows, but no equivalent function for other desktop environments - the
+webbrowser module seems to employ alternative mechanisms in choosing and
+running external programs and presumably does not seek to provide general
+support for non-URL resources anyway.  
+
+Since desktop environments like KDE and GNOME provide mechanisms for running
+browsers and editors according to the identified type of a file or resource,
+just as Windows "runs" files or resources, it is appropriate to have a module
+which accesses these mechanisms. It is this kind of functionality that the
+desktop package aims to support. Note that this approach is arguably better
+than that employed by the webbrowser module since most desktop environments
+already provide mechanisms for configuring and choosing the user's preferred
+programs for various activities, whereas the webbrowser module makes
+relatively uninformed guesses (for example, opening Firefox on a KDE desktop
+configured to use Konqueror as the default browser).
 
 Some ideas for desktop detection (XFCE) and URL opening (XFCE, X11) were
 obtained from the xdg-utils project which seeks to implement programs
@@ -27,7 +44,7 @@ contacted at the following e-mail address:
 paul@boddie.org.uk
 
 Copyright and licence information can be found in the docs directory - see
-docs/COPYING.txt and docs/LICENCE.txt for more information.
+docs/COPYING.txt, docs/lgpl-3.0.txt and docs/gpl-3.0.txt for more information.
 
 Notes
 -----
@@ -45,11 +62,12 @@ XFCE          Supports file and URL opening using exo-open.
 ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
 
-New in desktop 0.3.1 (Changes since desktop 0.3)
-------------------------------------------------
+New in desktop 0.4 (Changes since desktop 0.3)
+----------------------------------------------
 
   * Improved docstrings.
   * Fixed support for examining the root window.
+  * Changed the licence to the LGPL version 3 (or later).
 
 New in desktop 0.3 (Changes since desktop 0.2.4)
 ------------------------------------------------
@@ -109,6 +127,8 @@ To make Debian-based packages:
      Debian tools happy:
 
      ln -s packages/ubuntu-hoary/python2.4-desktop/debian/
+     ln -s packages/ubuntu-feisty/python-desktop/debian/
+     ln -s packages/ubuntu-hardy/python-desktop/debian/
 
   3. Run the package builder:
 
