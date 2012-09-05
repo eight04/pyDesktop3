@@ -55,12 +55,19 @@ KDE           Supports file and URL opening using kfmclient, where the openURL
               command opens the resource and the exec command runs the
               resource.
 
+KDE 4         Similar to KDE but uses kioclient instead of kfmclient.
+
 GNOME         Supports file and URL opening using gnome-open.
 
 XFCE          Supports file and URL opening using exo-open.
 
 ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
+
+New in desktop 0.4.1 (Changes since desktop 0.4)
+------------------------------------------------
+
+  * Added KDE 4 and Lubuntu support contributed by Jérôme Laheurte.
 
 New in desktop 0.4 (Changes since desktop 0.3)
 ----------------------------------------------

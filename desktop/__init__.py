@@ -74,7 +74,7 @@ The desktop.dialog module provides support for opening dialogue boxes.
 The desktop.windows module permits the inspection of desktop windows.
 """
 
-__version__ = "0.4"
+__version__ = "0.4.1"
 
 import os
 import sys
