@@ -5,7 +5,8 @@ Simple desktop integration for Python. This module provides desktop environment
 detection and resource opening support for a selection of common and
 standardised desktop environments.
 
-Copyright (C) 2005, 2006, 2007, 2008, 2009 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2005, 2006, 2007, 2008, 2009, 2012 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2012 Jérôme Laheurte <fraca7@free.fr>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the Free
@@ -156,8 +157,11 @@ def get_desktop():
 
     if os.environ.has_key("KDE_FULL_SESSION") or \
         os.environ.has_key("KDE_MULTIHEAD"):
-        if int(os.environ.get("KDE_SESSION_VERSION", "3")) >= 4:
-            return "KDE4"
+        try:
+            if int(os.environ.get("KDE_SESSION_VERSION", "3")) >= 4:
+                return "KDE4"
+        except ValueError:
+            pass
         return "KDE"
     elif os.environ.has_key("GNOME_DESKTOP_SESSION_ID") or \
         os.environ.has_key("GNOME_KEYRING_SOCKET"):
