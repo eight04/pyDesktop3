@@ -135,16 +135,19 @@ Making Packages
 To make Debian-based packages:
 
   1. Create new package directories under packages if necessary.
+
   2. Make a symbolic link in the distribution's root directory to keep the
      Debian tools happy:
 
-     ln -s packages/ubuntu-hoary/python2.4-desktop/debian/
-     ln -s packages/ubuntu-feisty/python-desktop/debian/
-     ln -s packages/ubuntu-hardy/python-desktop/debian/
+     ln -s packages/debian-wheezy/python-desktop/debian/
 
   3. Run the package builder:
 
      dpkg-buildpackage -rfakeroot
+
+     Or:
+
+     pdebuild
 
   4. Locate and tidy up the packages in the parent directory of the
      distribution's root directory.
