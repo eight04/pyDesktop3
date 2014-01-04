@@ -64,6 +64,11 @@ XFCE          Supports file and URL opening using exo-open.
 ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
 
+New in desktop 0.4.2 (Changes since desktop 0.4.1)
+--------------------------------------------------
+
+  * Added XFCE 4.10 "mailto:" fix contributed by Jérôme Laheurte.
+
 New in desktop 0.4.1 (Changes since desktop 0.4)
 ------------------------------------------------
 

@@ -6,8 +6,8 @@ Simple desktop integration for Python. This module provides desktop environment
 detection and resource opening support for a selection of common and
 standardised desktop environments.
 
-Copyright (C) 2005, 2006, 2007, 2008, 2009, 2012 Paul Boddie <paul@boddie.org.uk>
-Copyright (C) 2012 Jérôme Laheurte <fraca7@free.fr>
+Copyright (C) 2005, 2006, 2007, 2008, 2009, 2012, 2013 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2012, 2013 Jérôme Laheurte <fraca7@free.fr>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the Free
@@ -75,7 +75,7 @@ The desktop.dialog module provides support for opening dialogue boxes.
 The desktop.windows module permits the inspection of desktop windows.
 """
 
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 
 import os
 import sys
@@ -278,7 +278,12 @@ def open(url, desktop=None, wait=0):
         cmd = ["gnome-open", url]
 
     elif desktop_in_use == "XFCE":
-        cmd = ["exo-open", url]
+        # exo-open 0.10 cannot parse the mailto: URL scheme if there is no
+        # recipient
+        if url.lower().startswith('mailto:'):
+            cmd = ["exo-open", "--launch", "MailReader", url]
+        else:
+            cmd = ["exo-open", url]
 
     elif desktop_in_use == "Mac OS X":
         cmd = ["open", url]
