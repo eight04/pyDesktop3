@@ -5,3 +5,7 @@
 
 %:
 	dh $@ --with python2
+
+override_dh_auto_build:
+	tools/apidocs.sh
+	dh_auto_build
