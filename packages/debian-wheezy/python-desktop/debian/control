@@ -11,7 +11,7 @@ Vcs-Browser: http://hgweb.boddie.org.uk/desktop
 Package: python-desktop
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}
-Recommends: kde, gnome, xfce4
+Suggests: kde, gnome, xfce4
 Description: Desktop environment detection, inspection and interaction
  The desktop package supports application launching and the opening of
  dialogues and resources for a selection of common and standardised
