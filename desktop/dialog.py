@@ -3,7 +3,7 @@
 """
 Simple desktop dialogue box support for Python.
 
-Copyright (C) 2007, 2009 Paul Boddie <paul@boddie.org.uk>
+Copyright (C) 2007, 2009, 2014 Paul Boddie <paul@boddie.org.uk>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the Free
@@ -240,6 +240,7 @@ class Dialogue:
 
     commands = {
         "KDE" : "kdialog",
+        "KDE4" : "kdialog",
         "GNOME" : "zenity",
         "XFCE" : "zenity", # NOTE: Based on observations with Xubuntu.
         "X11" : "Xdialog"
@@ -255,7 +256,7 @@ class Dialogue:
         that particular desktop environment's mechanisms to open the dialog
         instead of guessing or detecting which environment is being used.
 
-        Suggested values for 'desktop' are "standard", "KDE", "GNOME",
+        Suggested values for 'desktop' are "standard", "KDE", "KDE4", "GNOME",
         "Mac OS X", "Windows".
 
         The result of the dialogue interaction may be a string indicating user

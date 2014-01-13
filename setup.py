@@ -8,6 +8,6 @@ setup(
     author       = "Paul Boddie",
     author_email = "paul@boddie.org.uk",
     url          = "http://www.python.org/pypi/desktop",
-    version      = "0.4.2",
+    version      = "0.4.3",
     packages     = ["desktop"]
     )

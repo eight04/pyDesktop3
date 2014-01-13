@@ -64,6 +64,11 @@ XFCE          Supports file and URL opening using exo-open.
 ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
 
+New in desktop 0.4.3 (Changes since desktop 0.4.2)
+--------------------------------------------------
+
+  * Added missing KDE 4 support to the desktop.dialog module.
+
 New in desktop 0.4.2 (Changes since desktop 0.4.1)
 --------------------------------------------------
 
