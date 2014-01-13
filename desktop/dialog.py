@@ -46,6 +46,7 @@ attribute.
 """
 
 from desktop import use_desktop, _run, _readfrom, _status
+from time import strptime
 
 class _wrapper:
     def __init__(self, handler):
@@ -82,6 +83,22 @@ class _readvalues_Xdialog(_wrapper):
             return result.split("/")
         else:
             return []
+
+class _readdate_kdialog(_wrapper):
+    def __call__(self, cmd, shell):
+        result = self.handler(cmd, shell).strip()
+        if result:
+            return strptime(result, "%a %b %d %Y")
+        else:
+            return None
+
+class _readdate_zenity(_wrapper):
+    def __call__(self, cmd, shell):
+        result = self.handler(cmd, shell).strip()
+        if result:
+            return strptime(result, "%Y %m %d")
+        else:
+            return None
 
 # Dialogue parameter classes.
 
@@ -539,9 +556,62 @@ class TextFile(Simple):
         Simple.__init__(self, text, width, height)
         self.filename = filename
 
+class FileSelector(Simple):
+
+    """
+    A file selector dialogue.
+    Options: directory to start in
+    Response: a filename
+    """
+
+    name = "fileselector"
+    info = {
+        "kdialog" : (_readvalue(_readfrom), ["--getopenfilename", String("directory")]),
+        "zenity" : (_readvalue(_readfrom), ["--file-selection", StringKeyword("--filename", "directory")]),
+        "Xdialog" : (_readvalue(_readfrom), ["--fselect", String("directory")]),
+        }
+
+    def __init__(self, directory, text="", width=None, height=None):
+        Simple.__init__(self, text, width, height)
+        self.directory = directory
+
+class DirectorySelector(Simple):
+
+    """
+    A directory selector dialogue.
+    Options: directory to start in
+    Response: a filename
+    """
+
+    name = "directoryselector"
+    info = {
+        "kdialog" : (_readvalue(_readfrom), ["--getexistingdirectory", String("directory")]),
+        "zenity" : (_readvalue(_readfrom), ["--file-selection", "--directory", StringKeyword("--filename", "directory")]),
+        "Xdialog" : (_readvalue(_readfrom), ["--dselect", String("directory")]),
+        }
+
+    def __init__(self, directory, text="", width=None, height=None):
+        Simple.__init__(self, text, width, height)
+        self.directory = directory
+
+class Calendar(Simple):
+
+    """
+    A calendar dialogue.
+    Response: a tuple of the form (year, month, day number)
+    """
+
+    name = "calendar"
+    info = {
+        "kdialog" : (_readdate_kdialog(_readfrom), ["--calendar", String("text")]),
+        "zenity" : (_readdate_zenity(_readfrom), ["--calendar", "--date-format", "%Y %m %d"]),
+        "Xdialog" : (_readdate_kdialog(_readfrom), ["--calendar", String("text")]),
+        }
+
 # Available dialogues.
 
-available = [Question, Warning, Message, Error, Menu, CheckList, RadioList, Input, Password, Pulldown, TextFile]
+available = [Question, Warning, Message, Error, Menu, CheckList, RadioList, Input, Password, Pulldown, TextFile, Calendar,
+             FileSelector, DirectorySelector]
 
 # Supported desktop environments.
 
