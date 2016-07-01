@@ -32,11 +32,19 @@ setup(
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
-        # TODO: add OS list
+        "Natural Language :: Chinese (Traditional)",
+        "Environment :: MacOS X",
+        "Environment :: Other Environment",
+        "Environment :: Win32 (MS Windows)",
+        "Environment :: X11 Applications",
+        "Environment :: X11 Applications :: Gnome",
+        "Environment :: X11 Applications :: KDE",
+        "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
-        "Topic :: Desktop Environment",
+        "Topic :: Desktop Environment :: Window Managers :: XFCE",
         "Topic :: Utilities"
     ],
-    keywords = "start startfile open opener launch launcher"
+    keywords = "desktop startfile DESKTOP_LAUNCH KDE KDE4 GNOME XFCE XFCE4 Lubuntu dialog kdialog zenity Xdialog X11 start open opener launch launcher",
+    platforms = "any"
 )
