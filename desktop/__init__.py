@@ -7,7 +7,7 @@ detection and resource opening support for a selection of common and
 standardised desktop environments.
 
 Copyright (C) 2005, 2006, 2007, 2008, 2009, 2012, 2013, 2014 Paul Boddie <paul@boddie.org.uk>
-Copyright (C) 2012, 2013 Jérôme Laheurte <fraca7@free.fr>
+Copyright (C) 2012, 2013 JÃ©rÃ´me Laheurte <fraca7@free.fr>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the Free
