@@ -1,7 +1,7 @@
 desktop3
 ========
 
-This is a port of python [desktop](https://pypi.python.org/pypi/desktop) package to work in python 3.
+This is a port of python `desktop <https://pypi.python.org/pypi/desktop>`__ package to work in python 3.
 
 Introduction
 ------------
@@ -56,6 +56,7 @@ Notes
 
 Notes on desktop application/environment support:
 
+============= ================================================================
 KDE           Supports file and URL opening using kfmclient, where the openURL
               command opens the resource and the exec command runs the
               resource.
@@ -68,31 +69,35 @@ XFCE          Supports file and URL opening using exo-open.
 
 ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
+============= ================================================================
+
+Old Changelog
+-------------
 
 New in desktop 0.4.3 (Changes since desktop 0.4.2)
---------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   * Added missing KDE 4 support to the desktop.dialog module.
 
 New in desktop 0.4.2 (Changes since desktop 0.4.1)
---------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   * Added XFCE 4.10 "mailto:" fix contributed by Jérôme Laheurte.
 
 New in desktop 0.4.1 (Changes since desktop 0.4)
-------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   * Added KDE 4 and Lubuntu support contributed by Jérôme Laheurte.
 
 New in desktop 0.4 (Changes since desktop 0.3)
-----------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   * Improved docstrings.
   * Fixed support for examining the root window.
   * Changed the licence to the LGPL version 3 (or later).
 
 New in desktop 0.3 (Changes since desktop 0.2.4)
-------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   * Made desktop a package.
   * Added support for graphical dialogue boxes through programs such as
@@ -100,28 +105,28 @@ New in desktop 0.3 (Changes since desktop 0.2.4)
   * Added support for inspecting desktop windows (currently only for X11).
 
 New in desktop 0.2.4 (Changes since desktop 0.2.3)
---------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   * Added XFCE support (with advice from Miki Tebeka).
   * Added Ubuntu Feisty (7.04) package support.
 
 New in desktop 0.2.3 (Changes since desktop 0.2.2)
---------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   * Added Python 2.3 support (using popen2 instead of subprocess).
 
 New in desktop 0.2.2 (Changes since desktop 0.2.1)
---------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   * Changed the licence to LGPL.
 
 New in desktop 0.2.1 (Changes since desktop 0.2)
-------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   * Added Debian/Ubuntu package support.
 
 New in desktop 0.2 (Changes since desktop 0.1)
-----------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   * Added support for waiting for launcher processes.
   * Added a tests directory.
