@@ -3,13 +3,14 @@
 from xcute import cute, conf, Exc, Bump, Version
 
 conf["proj_name"] = "desktop3"
+conf["package_name"] = "desktop"
 
-Version('{proj_name}/__init__.py')()
+Version('{package_name}/__init__.py')()
 
 cute(
-	test = 'readme_build',
+	test = ["pyflakes {package_name} setup.py", 'readme_build'],
 	bump_pre = 'test',
-	bump = Bump("{proj_name}/__init__.py"),
+	bump = Bump("{package_name}/__init__.py"),
 	bump_post = ['dist', 'release', 'publish', 'install'],
 	dist = 'python setup.py sdist bdist_wheel',
 	release = [
