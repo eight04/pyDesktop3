@@ -1,7 +1,7 @@
 desktop3
 ========
 
-This is a port of python `desktop <https://pypi.python.org/pypi/desktop>`__ package to work in python 3.
+This is a python 3 port of `desktop <https://pypi.python.org/pypi/desktop>`__ package.
 
 Introduction
 ------------
@@ -71,6 +71,13 @@ ROX-Filer     Supports file opening using "rox <filename>" but not URL
               opening.
 ============= ================================================================
 
+Changelog
+---------
+
+*  0.5.0 (Jul 2, 2016)
+
+   -  First release.
+
 Old Changelog
 -------------
 
@@ -130,39 +137,3 @@ New in desktop 0.2 (Changes since desktop 0.1)
 
   * Added support for waiting for launcher processes.
   * Added a tests directory.
-
-Release Procedures
-------------------
-
-Update the desktop __version__ attribute.
-Change the version number and package filename/directory in the documentation.
-Update the release notes (see above).
-Update the package information.
-Check the release information in the PKG-INFO file.
-Check the setup.py file.
-Tag, export.
-Archive, upload.
-Update PyPI entry.
-
-Making Packages
----------------
-
-To make Debian-based packages:
-
-  1. Create new package directories under packages if necessary.
-
-  2. Make a symbolic link in the distribution's root directory to keep the
-     Debian tools happy:
-
-     ln -s packages/debian-wheezy/python-desktop/debian/
-
-  3. Run the package builder:
-
-     dpkg-buildpackage -rfakeroot
-
-     Or:
-
-     pdebuild
-
-  4. Locate and tidy up the packages in the parent directory of the
-     distribution's root directory.
