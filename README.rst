@@ -3,13 +3,27 @@ desktop3
 
 This is a python 3 port of `desktop <https://pypi.python.org/pypi/desktop>`__ package.
 
-A small example:
+    The desktop package provides desktop environment detection and resource
+    opening support for a selection of common and standardised desktop
+    environments.
+
+Insallation
+-----------
+
+::
+
+    pip install desktop3
+
+Usage
+-----
+
+Launch folders, files, ... etc:
 
 .. code:: python
 
     import desktop
     desktop.open("what/you/want/to/open")
-
+    
 Introduction
 ------------
 
