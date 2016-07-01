@@ -45,7 +45,7 @@ Supported desktop environments are listed in the desktop.dialog.supported
 attribute.
 """
 
-from desktop import use_desktop, _run, _readfrom, _status
+from desktop import use_desktop, _readfrom, _status
 from time import strptime
 
 class _wrapper:
@@ -296,7 +296,7 @@ class Dialogue:
         try:
             program = self.commands[desktop_in_use]
         except KeyError:
-            raise OSError, "Desktop '%s' not supported (no known dialogue box command could be suggested)" % desktop_in_use
+            raise OSError("Desktop '%s' not supported (no known dialogue box command could be suggested)" % desktop_in_use)
 
         # The handler is one of the functions communicating with the subprocess.
         # Some handlers return boolean values, others strings.
@@ -491,7 +491,7 @@ class Pulldown(Menu):
         "Xdialog" : (_readvalue(_readfrom),
             ["--stdout", "--combobox", String("text"), Integer("height"), Integer("width"), Strings("items")]),
         }
-    item = unicode
+    item = str
     number_of_titles = 2
 
 class Input(Simple):
