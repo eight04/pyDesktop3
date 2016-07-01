@@ -79,6 +79,7 @@ __version__ = "0.4.3"
 
 import os
 import sys
+import shlex
 
 # Provide suitable process creation functions.
 
@@ -116,8 +117,6 @@ except ImportError:
         opener = popen2.Popen3(cmd)
         opener.wait()
         return opener.poll() == 0
-
-import commands
 
 # Private functions.
 
@@ -261,7 +260,7 @@ def open(url, desktop=None, wait=0):
     desktop_in_use = use_desktop(desktop)
 
     if desktop_in_use == "standard":
-        arg = "".join([os.environ["DESKTOP_LAUNCH"], commands.mkarg(url)])
+        arg = "".join([os.environ["DESKTOP_LAUNCH"], shlex.quote(url)])
         return _run(arg, 1, wait)
 
     elif desktop_in_use == "Windows":
