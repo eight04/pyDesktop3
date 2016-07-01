@@ -1,3 +1,8 @@
+desktop3
+========
+
+This is a port of python [desktop](https://pypi.python.org/pypi/desktop) package to work in python 3.
+
 Introduction
 ------------
 
@@ -72,12 +77,12 @@ New in desktop 0.4.3 (Changes since desktop 0.4.2)
 New in desktop 0.4.2 (Changes since desktop 0.4.1)
 --------------------------------------------------
 
-  * Added XFCE 4.10 "mailto:" fix contributed by Jérôme Laheurte.
+  * Added XFCE 4.10 "mailto:" fix contributed by JÃ©rÃ´me Laheurte.
 
 New in desktop 0.4.1 (Changes since desktop 0.4)
 ------------------------------------------------
 
-  * Added KDE 4 and Lubuntu support contributed by Jérôme Laheurte.
+  * Added KDE 4 and Lubuntu support contributed by JÃ©rÃ´me Laheurte.
 
 New in desktop 0.4 (Changes since desktop 0.3)
 ----------------------------------------------
