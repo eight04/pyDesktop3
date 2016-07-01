@@ -3,6 +3,13 @@ desktop3
 
 This is a python 3 port of `desktop <https://pypi.python.org/pypi/desktop>`__ package.
 
+A small example:
+
+.. code:: python
+
+    import desktop
+    desktop.open("what/you/want/to/open")
+
 Introduction
 ------------
 
