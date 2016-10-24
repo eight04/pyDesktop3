@@ -95,6 +95,10 @@ ROX-Filer     Supports file opening using "rox <filename>" but not URL
 Changelog
 ---------
 
+*  0.5.1 (Oct 25, 2016)
+
+   -  Fix letter case issue in ``setup.py``.
+
 *  0.5.0 (Jul 2, 2016)
 
    -  First release.
