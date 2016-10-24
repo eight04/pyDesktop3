@@ -18,7 +18,7 @@ def find_version(file):
 setup(
     name         = "desktop3",
     description  = "Simple desktop integration for Python.",
-    long_description = read("readme.rst"),
+    long_description = read("README.rst"),
     author       = "Paul Boddie",
     author_email = "paul@boddie.org.uk",
     maintainer = "eight04",
