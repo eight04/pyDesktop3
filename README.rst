@@ -95,6 +95,10 @@ ROX-Filer     Supports file opening using "rox <filename>" but not URL
 Changelog
 ---------
 
+*  0.5.2 (Oct 26, 2016)
+
+   -  Add docs folder into dist file.
+
 *  0.5.1 (Oct 25, 2016)
 
    -  Fix letter case issue in ``setup.py``.
