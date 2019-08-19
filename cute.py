@@ -1,14 +1,20 @@
 #! python3
 
-from xcute import cute, conf, Exc
+from xcute import cute
 
-conf["proj_name"] = "desktop3"
-
+def readme():
+	"""Live reload readme"""
+	from livereload import Server
+	server = Server()
+	server.watch("README.rst", "py cute.py readme_build")
+	server.serve(open_url_delay=1, root="build/readme")
+	
 cute(
 	pkg_name = "desktop",
 	test = ["pyflakes {pkg_name} setup.py", 'readme_build'],
 	bump_pre = 'test',
-	bump_post = ['dist', 'release', 'publish', 'install'],
+	bump_post = ['clean', 'dist', 'release', 'publish', 'install'],
+    clean = 'x-clean build dist',
 	dist = 'python setup.py sdist bdist_wheel',
 	release = [
 		'git add .',
@@ -16,15 +22,15 @@ cute(
 		'git tag -a v{version} -m "Release v{version}"'
 	],
 	publish = [
-		'twine upload dist/*{version}[.-]*',
+		'twine upload dist/*',
 		'git push --follow-tags'
 	],
-	publish_err = 'start https://pypi.python.org/pypi/{proj_name}/',
 	install = 'pip install -e .',
-	install_err = 'elevate -c -w pip install -e .',
-	readme_build = 'python setup.py --long-description > %temp%/ld && rst2html --no-raw --exit-status=1 --verbose %temp%/ld %temp%/ld.html',
-	readme_build_err = ['readme_show', Exc()],
-	readme_show = 'start %temp%/ld.html',
-	readme = 'readme_build',
-	readme_post = 'readme_show'
+	readme_build = [
+		'python setup.py --long-description | x-pipe build/readme/index.rst',
+		'rst2html5.py --no-raw --exit-status=1 --verbose '
+			'build/readme/index.rst build/readme/index.html'
+	],
+	readme_pre = "readme_build",
+	readme = readme
 )
