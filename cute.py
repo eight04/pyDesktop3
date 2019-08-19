@@ -13,7 +13,8 @@ cute(
 	pkg_name = "desktop",
 	test = ["pyflakes {pkg_name} setup.py", 'readme_build'],
 	bump_pre = 'test',
-	bump_post = ['dist', 'release', 'publish', 'install'],
+	bump_post = ['clean', 'dist', 'release', 'publish', 'install'],
+    clean = 'x-clean build dist',
 	dist = 'python setup.py sdist bdist_wheel',
 	release = [
 		'git add .',
@@ -21,7 +22,7 @@ cute(
 		'git tag -a v{version} -m "Release v{version}"'
 	],
 	publish = [
-		'twine upload dist/*{version}[.-]*',
+		'twine upload dist/*',
 		'git push --follow-tags'
 	],
 	install = 'pip install -e .',

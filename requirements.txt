@@ -3,3 +3,4 @@ livereload==2.6.1
 pyflakes
 pyxcute>=0.3.0
 twine>=1.6.5
+wheel==0.33.6
