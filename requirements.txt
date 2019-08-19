@@ -1,4 +1,5 @@
 docutils>=0.12
+livereload==2.6.1
 pyflakes
 pyxcute>=0.3.0
 twine>=1.6.5
