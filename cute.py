@@ -1,12 +1,12 @@
 #! python3
 
-from xcute import cute
+from xcute import cute, run_task
 
 def readme():
 	"""Live reload readme"""
-	from livereload import Server
+	from livereload import Server, shell
 	server = Server()
-	server.watch("README.rst", "py cute.py readme_build")
+	server.watch("README.rst", lambda: run_task("readme_build"))
 	server.serve(open_url_delay=1, root="build/readme")
 	
 cute(

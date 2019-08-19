@@ -98,17 +98,21 @@ ROX-Filer     Supports file opening using "rox <filename>" but not URL
 Changelog
 ---------
 
-*  0.5.2 (Oct 26, 2016)
+* 0.5.3 (Aug 19, 2019)
 
-   -  Add docs folder into dist file.
+  - Fix: unable to detect XFCE.
+  
+* 0.5.2 (Oct 26, 2016)
 
-*  0.5.1 (Oct 25, 2016)
+  - Add docs folder into dist file.
 
-   -  Fix letter case issue in ``setup.py``.
+* 0.5.1 (Oct 25, 2016)
 
-*  0.5.0 (Jul 2, 2016)
+  - Fix letter case issue in ``setup.py``.
 
-   -  First release.
+* 0.5.0 (Jul 2, 2016)
+
+  - First release.
 
 Old Changelog
 -------------
