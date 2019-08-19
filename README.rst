@@ -1,6 +1,9 @@
 desktop3
 ========
 
+.. image:: https://travis-ci.com/eight04/pyDesktop3.svg?branch=master
+    :target: https://travis-ci.com/eight04/pyDesktop3
+
 This is a python 3 port of `desktop <https://pypi.python.org/pypi/desktop>`__ package.
 
     The desktop package provides desktop environment detection and resource
