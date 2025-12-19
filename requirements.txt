@@ -1,6 +1,5 @@
 docutils==0.15.2
 livereload==2.6.1
 pyflakes==2.1.1
-pyxcute==0.5.2
-twine==1.13.0
-wheel==0.33.6
+pyxcute==0.8.1
+twine==6.2.0
