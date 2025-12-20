@@ -98,6 +98,10 @@ ROX-Filer     Supports file opening using "rox <filename>" but not URL
 Changelog
 ---------
 
+* 0.5.4 (Sep 20, 2025)
+
+  - Fix: use raw string on docstring to avoid escape sequence issues.
+
 * 0.5.3 (Aug 19, 2019)
 
   - Fix: unable to detect XFCE.
