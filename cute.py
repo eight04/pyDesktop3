@@ -1,5 +1,5 @@
 #! python3
-
+import sys
 from xcute import cute, run_task
 
 def readme():
@@ -11,7 +11,7 @@ def readme():
 	
 cute(
 	pkg_name = "desktop",
-	test = ["pyflakes {pkg_name} setup.py", 'readme_build'],
+	test = ["pyflakes {pkg_name} setup.py", sys.version_info >= (3,9) and 'readme_build'],
 	bump_pre = 'test',
 	bump_post = ['clean', 'dist', 'release', 'publish', 'install'],
     clean = 'x-clean build dist',
