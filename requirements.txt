@@ -2,4 +2,5 @@ docutils==0.15.2
 livereload==2.6.1
 pyflakes==2.1.1
 pyxcute==0.8.1
+setuptools==80.9.0
 twine==6.2.0
