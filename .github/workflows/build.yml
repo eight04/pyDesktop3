@@ -1,15 +1,17 @@
 on: push
 jobs:
   build:
-    runs-on: ubuntu-20.04 # for python 3.6 support
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.6", "3.10", "3.11", "3.12", "3.13"]
+    container:
+      image: python:${{ matrix.python-version }}-slim
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
+      # - uses: actions/setup-python@v3
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
       - run: pip install -U pip wheel
       # - run: pip install -r requirements.txt
       - run: cat requirements.txt | xargs -n 1 pip install || exit 0
