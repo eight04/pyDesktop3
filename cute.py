@@ -1,5 +1,5 @@
 #! python3
-
+import sys
 from xcute import cute, run_task
 
 def readme():
@@ -11,7 +11,7 @@ def readme():
 	
 cute(
 	pkg_name = "desktop",
-	test = ["pyflakes {pkg_name} setup.py", 'readme_build'],
+	test = ["pyflakes {pkg_name} setup.py", sys.version_info >= (3,9) and 'readme_build'],
 	bump_pre = 'test',
 	bump_post = ['clean', 'dist', 'release', 'publish', 'install'],
     clean = 'x-clean build dist',
@@ -28,7 +28,7 @@ cute(
 	install = 'pip install -e .',
 	readme_build = [
 		'python setup.py --long-description | x-pipe build/readme/index.rst',
-		'rst2html5.py --no-raw --exit-status=1 --verbose '
+		'rst2html5 --no-raw --exit-status=1 --verbose '
 			'build/readme/index.rst build/readme/index.html'
 	],
 	readme_pre = "readme_build",
