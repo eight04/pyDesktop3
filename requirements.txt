@@ -1,4 +1,4 @@
-docutils==0.15.2
+docutils==0.22.4
 livereload==2.6.1
 pyflakes==2.1.1
 pyxcute==0.8.1
